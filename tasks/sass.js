@@ -9,6 +9,8 @@ gulp.task('sass', function() {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(postcss([autoprefixer()]))
-    .pipe(sourcemaps.write('./'))
+    .pipe(sourcemaps.write('./', {
+      sourceRoot: 'src/'
+    }))
     .pipe(gulp.dest('./styles'));
 });
