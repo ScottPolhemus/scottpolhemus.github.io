@@ -11,28 +11,8 @@ body {
   max-width: 800px;
 }
 
-header {
-  @media (max-width: 550px) {
-    text-align: center;
-    font-size: 16px;
-  }
-
-  h1 {
-    font-family: "futura-pt", sans-serif;
-    font-size: 2.5em;
-    font-weight: 400;
-    margin: 0;
-    margin-bottom: 0.25em;
-    line-height: 1;
-  }
-
-  h2 {
-    font-family: "futura-pt", sans-serif;
-    font-size: 2.9em;
-    font-weight: 300;
-    margin: 0;
-    line-height: 1;
-  }
+h1, h2, h3 {
+  font-family: "futura-pt", sans-serif;
 }
 
 a {
@@ -43,5 +23,27 @@ a {
   &:active {
     color: white;
     text-decoration: none;
+  }
+}
+
+header {
+  @media (max-width: 550px) {
+    text-align: center;
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 0.25em;
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 2.9em;
+    font-weight: 300;
+    margin: 0;
+    line-height: 1;
   }
 }
