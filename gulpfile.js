@@ -6,11 +6,11 @@ require('./tasks/sass');
 gulp.task('default', ['sass'], function() {
   livereload.listen();
 
-  gulp.watch(['./**/*.scss'], ['sass']);
+  gulp.watch(['**/*.scss'], ['sass']);
 
   gulp.watch([
-    './**/*.html',
-    './styles/*.css'
+    '**/*.html',
+    'styles/*.css'
   ], function(event) {
     livereload.changed(event.path);
   });
