@@ -1,5 +1,9 @@
+html, body {
+  position: relative;
+  width: 100%;
+  height: 100%; }
+
 html {
-  padding: 1rem;
   font-size: 30px;
   font-family: "le-monde-livre-classic-byol", sans-serif;
   color: rgba(255, 255, 255, 0.9);
@@ -8,6 +12,10 @@ html {
     html {
       font-size: 20px; } }
 
+body {
+  margin: auto;
+  max-width: 800px; }
+
 ::-moz-selection {
   color: white;
   background: black; }
@@ -15,10 +23,6 @@ html {
 ::selection {
   color: white;
   background: black; }
-
-body {
-  margin: auto;
-  max-width: 800px; }
 
 h1, h2 {
   font-family: "le-monde-livre-classic-std-s", cursive;
@@ -49,5 +53,15 @@ a {
 
 header {
   text-align: center; }
+
+.vertical-center-outer {
+  display: table;
+  width: 100%;
+  height: 100%; }
+
+.vertical-center-inner {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 1rem; }
 
 /*# sourceMappingURL=main.css.map */
