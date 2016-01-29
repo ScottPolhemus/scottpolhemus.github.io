@@ -8,7 +8,7 @@ html, body {
 
 html {
   font-size: 30px;
-  font-family: "le-monde-livre-classic-byol", sans-serif;
+  font-family: "futura-pt", sans-serif;
   color: fade-out(white, .1);
   background: $blue;
 
@@ -47,7 +47,8 @@ h2 {
 }
 
 h3 {
-  font-weight: 400;
+  font-weight: 700;
+  margin-bottom: 0.25em;
 }
 
 p {
@@ -65,6 +66,8 @@ a {
 }
 
 ul {
+  margin: 0;
+
   li {
     margin-bottom: 0.25em;
   }
