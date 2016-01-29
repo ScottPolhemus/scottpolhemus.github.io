@@ -51,6 +51,9 @@ a {
   a:hover, a:focus, a:active {
     color: white; }
 
+ul li {
+  margin-bottom: 0.25em; }
+
 header {
   text-align: center; }
 
