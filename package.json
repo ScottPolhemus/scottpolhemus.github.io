@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "author": "Scott Polhemus <scott@polhem.us>",
   "devDependencies": {
-    "autoprefixer": "^6.3.1",
-    "gulp": "^3.9.0",
+    "autoprefixer": "^6.3.6",
+    "gulp": "^3.9.1",
     "gulp-less": "^3.0.5",
     "gulp-livereload": "^3.8.1",
-    "gulp-postcss": "^6.0.1",
+    "gulp-postcss": "^6.1.0",
     "gulp-sourcemaps": "^1.6.0"
   }
 }

@@ -1,12 +1,12 @@
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
 
-require('./tasks/sass');
+require('./tasks/less');
 
-gulp.task('default', ['sass'], function() {
+gulp.task('default', ['less'], function() {
   livereload.listen();
 
-  gulp.watch(['**/*.scss'], ['sass']);
+  gulp.watch(['**/*.less'], ['less']);
 
   gulp.watch([
     '**/*.html',
@@ -16,4 +16,4 @@ gulp.task('default', ['sass'], function() {
   });
 });
 
-gulp.task('build', ['sass']);
+gulp.task('build', ['less']);

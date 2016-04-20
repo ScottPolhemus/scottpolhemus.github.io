@@ -1,16 +1,17 @@
 var gulp = require('gulp');
-var sass = require('gulp-sass');
+var less = require('gulp-less');
 var sourcemaps = require('gulp-sourcemaps');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 
-gulp.task('sass', function() {
-  return gulp.src('./styles/src/*.scss')
+gulp.task('less', function() {
+  return gulp.src('./styles/src/*.less')
     .pipe(sourcemaps.init())
-    .pipe(sass().on('error', sass.logError))
+    .pipe(less())
     .pipe(postcss([autoprefixer()]))
     .pipe(sourcemaps.write('./', {
-      sourceRoot: 'src/'
+      sourceRoot: 'src/',
+      includeContent: false
     }))
     .pipe(gulp.dest('./styles'));
 });

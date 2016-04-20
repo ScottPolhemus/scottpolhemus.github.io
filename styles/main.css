@@ -1,73 +1,82 @@
-html, body {
+html,
+body {
   position: relative;
   width: 100%;
-  height: 100%; }
-
+  height: 100%;
+}
 html {
   font-size: 30px;
   font-family: "futura-pt", sans-serif;
-  color: rgba(255, 255, 255, 0.9);
-  background: #457FC2; }
-  @media (max-width: 600px) {
-    html {
-      font-size: 20px; } }
-
+  color: rgba(255, 255, 255, 0.999);
+  background: #457FC2;
+}
+@media (max-width: 600px) {
+  html {
+    font-size: 20px;
+  }
+}
 body {
   margin: auto;
-  max-width: 800px; }
-
+  max-width: 800px;
+}
 ::-moz-selection {
   color: white;
-  background: black; }
-
+  background: black;
+}
 ::selection {
   color: white;
-  background: black; }
-
-h1, h2 {
+  background: black;
+}
+h1,
+h2 {
   font-family: "le-monde-livre-classic-std-s", cursive;
   font-weight: 400;
   margin: auto;
-  letter-spacing: -0.025em; }
-
+  letter-spacing: -0.025em;
+}
 h1 {
   font-size: 2.5rem;
   line-height: 1;
-  margin-bottom: 0.125em; }
-
+  margin-bottom: 0.125em;
+}
 h2 {
   font-size: 1.25rem;
   line-height: 1.3;
-  margin-bottom: 0.125em; }
-
+  margin-bottom: 0.125em;
+}
 h3 {
   font-weight: 700;
-  margin-bottom: 0.25em; }
-
+  margin-bottom: 0.25em;
+}
 p {
-  line-height: 1.3; }
-
+  line-height: 1.3;
+}
 a {
-  color: inherit; }
-  a:hover, a:focus, a:active {
-    color: white; }
-
+  color: inherit;
+}
+a:hover,
+a:focus,
+a:active {
+  color: white;
+}
 ul {
-  margin: 0; }
-  ul li {
-    margin-bottom: 0.25em; }
-
+  margin: 0;
+}
+ul li {
+  margin-bottom: 0.25em;
+}
 header {
-  text-align: center; }
-
+  text-align: center;
+}
 .vertical-center-outer {
   display: table;
   width: 100%;
-  height: 100%; }
-
+  height: 100%;
+}
 .vertical-center-inner {
   display: table-cell;
   vertical-align: middle;
-  padding: 1rem; }
+  padding: 1rem;
+}
 
 /*# sourceMappingURL=main.css.map */
