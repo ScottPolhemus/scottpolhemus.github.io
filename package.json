@@ -19,5 +19,9 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   },
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "scroll-in": "0.0.6"
+  },
   "browserify-shim": {}
 }

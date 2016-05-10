@@ -1,3 +1,134 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+* {
+  box-sizing: border-box;
+}
 html,
 body {
   position: relative;
@@ -7,56 +138,53 @@ body {
 html {
   font-size: 30px;
   font-family: "futura-pt", sans-serif;
-  color: rgba(0, 0, 0, 0.995);
-}
-@media (max-width: 600px) {
-  html {
-    font-size: 20px;
-  }
+  background: black;
+  color: white;
 }
 body {
   margin: auto;
-  max-width: 800px;
+  max-width: 900px;
+  visibility: hidden;
+}
+body.ready {
+  visibility: visible;
 }
 ::-moz-selection {
-  color: white;
-  background: black;
+  color: black;
+  background: white;
 }
 ::selection {
-  color: white;
-  background: black;
-}
-h1,
-h2 {
-  font-family: "le-monde-livre-classic-std-s", cursive;
-  font-weight: 400;
-  margin: auto;
-  letter-spacing: -0.025em;
-}
-h1 {
-  font-size: 2.5rem;
-  line-height: 1;
-  margin-bottom: 0.125em;
-}
-h2 {
-  font-size: 1.25rem;
-  line-height: 1.3;
-  margin-bottom: 0.125em;
-}
-h3 {
-  font-weight: 700;
-  margin-bottom: 0.25em;
+  color: black;
+  background: white;
 }
 p {
   line-height: 1.3;
 }
+p.design-credit {
+  font-size: 0.75em;
+  margin-bottom: 0.25rem;
+}
 a {
   color: inherit;
 }
-a:hover,
-a:focus,
-a:active {
-  color: #457FC2;
+button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 0.75em;
+  line-height: 1.3;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+button[disabled] {
+  cursor: default;
+  opacity: 0.5;
 }
 ul {
   margin: 0;
@@ -64,8 +192,64 @@ ul {
 ul li {
   margin-bottom: 0.25em;
 }
+.box,
+header,
+.speech-bubble > div {
+  border: 3px solid;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+}
+.box > *:last-child,
+.speech-bubble > div > *:last-child {
+  margin-bottom: 0;
+}
 header {
-  text-align: center;
+  float: left;
+  overflow: hidden;
+}
+header h1,
+header h2 {
+  line-height: 1;
+  font-weight: inherit;
+}
+header h1 {
+  font-size: 1em;
+  margin-bottom: 0.25em;
+}
+header h2 {
+  font-size: 0.75em;
+  margin-top: 0;
+}
+.speech-bubble {
+  float: left;
+  clear: left;
+  overflow: visible;
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
+}
+.speech-bubble[data-scroll-in]:not([data-scroll-in="in"]) {
+  height: 0 !important;
+  opacity: 0;
+}
+.speech-bubble[data-scroll-in="in"] {
+  -webkit-animation: ShowSpeechBubble 600ms;
+          animation: ShowSpeechBubble 600ms;
+}
+.speech-bubble[data-click-in]:not([data-click-in="in"]) {
+  height: 0 !important;
+  opacity: 0;
+}
+.speech-bubble[data-click-in="in"] {
+  -webkit-animation: ShowSpeechBubble 600ms;
+          animation: ShowSpeechBubble 600ms;
+}
+.project {
+  margin-right: 1em;
+}
+.project ~ .project {
+  clear: none;
 }
 .vertical-center-outer {
   display: table;
@@ -76,6 +260,29 @@ header {
   display: table-cell;
   vertical-align: middle;
   padding: 1rem;
+  padding-top: 2rem;
+}
+@-webkit-keyframes ShowSpeechBubble {
+  0% {
+    opacity: 0;
+    height: 0;
+    -webkit-transform: scale(0.75);
+            transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes ShowSpeechBubble {
+  0% {
+    opacity: 0;
+    height: 0;
+    -webkit-transform: scale(0.75);
+            transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */
