@@ -4,11 +4,20 @@
   "author": "Scott Polhemus <scott@polhem.us>",
   "devDependencies": {
     "autoprefixer": "^6.3.6",
+    "browserify": "^13.0.1",
+    "browserify-shim": "^3.8.12",
     "gulp": "^3.9.1",
     "gulp-connect": "^3.2.3",
     "gulp-less": "^3.0.5",
     "gulp-livereload": "^3.8.1",
     "gulp-postcss": "^6.1.0",
-    "gulp-sourcemaps": "^1.6.0"
-  }
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "minifyify": "^7.3.3",
+    "pretty-hrtime": "^1.0.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "browserify-shim": {}
 }
