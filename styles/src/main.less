@@ -11,7 +11,7 @@ html, body {
 }
 
 html {
-  font-size: 30px;
+  font-size: 25px;
   font-family: "futura-pt", sans-serif;
   background: black;
   color: white;
@@ -36,7 +36,7 @@ p {
   line-height: 1.3;
 
   &.design-credit {
-    font-size: 0.75em;
+    font-size: 0.5em;
     margin-bottom: 0.25rem;
   }
 }
@@ -70,14 +70,6 @@ button {
   }
 }
 
-ul {
-  margin: 0;
-
-  li {
-    margin-bottom: 0.25em;
-  }
-}
-
 .box {
   border: 3px solid;
   padding: 0.5em;
@@ -86,27 +78,6 @@ ul {
 
   > *:last-child {
     margin-bottom: 0;
-  }
-}
-
-header {
-  &:extend(.box);
-  float: left;
-  overflow: hidden;
-
-  h1, h2 {
-    line-height: 1;
-    font-weight: inherit;
-  }
-
-  h1 {
-    font-size: 1em;
-    margin-bottom: 0.25em;
-  }
-
-  h2 {
-    font-size: 0.75em;
-    margin-top: 0;
   }
 }
 
@@ -120,23 +91,33 @@ header {
     &:extend(.box all);
   }
 
-  &[data-scroll-in]:not([data-scroll-in="in"]) {
+  &[data-click-in]:not([data-click-in="in"]),
+  &[data-speech-bubble]:not([data-speech-bubble="in"]) {
     height: 0 !important;
     opacity: 0;
+    pointer-events: none;
   }
 
-  &[data-scroll-in="in"] {
+  &[data-speech-bubble="in"] {
     animation: ShowSpeechBubble 600ms;
-  }
-
-  &[data-click-in]:not([data-click-in="in"]) {
-    height: 0 !important;
-    opacity: 0;
   }
 
   &[data-click-in="in"] {
     animation: ShowSpeechBubble 600ms;
   }
+
+  &.right {
+    float: right;
+    clear: none;
+
+    > div {
+      border: 0;
+    }
+  }
+}
+
+.projects {
+  margin-right: -1em;
 }
 
 .project {
@@ -144,6 +125,76 @@ header {
 
   ~ .project {
     clear: none;
+
+    &:last-child {
+      clear: left;
+    }
+  }
+
+  &.half {
+    max-width: 450px;
+  }
+
+  > div {
+    transition: background 500ms;
+
+    &:hover {
+      transition-duration: 150ms;
+    }
+  }
+}
+
+.pillow {
+  > div:hover {
+    background: #0258D2;
+  }
+}
+
+.bike {
+  > div:hover {
+    background: #4AB678;
+  }
+}
+
+.honey {
+  > div:hover {
+    background: #F69523;
+  }
+}
+
+.vermont {
+  > div:hover {
+    background: #CA3725;
+  }
+}
+
+.contact-info {
+  float: right;
+  font-size: 0.7em;
+
+  h1, ul, li, a {
+    display: inline-block;
+  }
+
+  h1 {
+    padding: 0.25em;
+    margin-right: 1em;
+
+    span {
+      display: inline-block;
+
+      &:after {
+        content: ' |';
+      }
+
+      &:last-child:after {
+        content: none;
+      }
+    }
+  }
+
+  a {
+    padding: 0.25em;
   }
 }
 

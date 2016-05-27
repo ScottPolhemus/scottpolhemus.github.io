@@ -136,7 +136,7 @@ body {
   height: 100%;
 }
 html {
-  font-size: 30px;
+  font-size: 25px;
   font-family: "futura-pt", sans-serif;
   background: black;
   color: white;
@@ -161,7 +161,7 @@ p {
   line-height: 1.3;
 }
 p.design-credit {
-  font-size: 0.75em;
+  font-size: 0.5em;
   margin-bottom: 0.25rem;
 }
 a {
@@ -186,14 +186,7 @@ button[disabled] {
   cursor: default;
   opacity: 0.5;
 }
-ul {
-  margin: 0;
-}
-ul li {
-  margin-bottom: 0.25em;
-}
 .box,
-header,
 .speech-bubble > div {
   border: 3px solid;
   padding: 0.5em;
@@ -205,23 +198,6 @@ header,
 .speech-bubble > div > *:last-child {
   margin-bottom: 0;
 }
-header {
-  float: left;
-  overflow: hidden;
-}
-header h1,
-header h2 {
-  line-height: 1;
-  font-weight: inherit;
-}
-header h1 {
-  font-size: 1em;
-  margin-bottom: 0.25em;
-}
-header h2 {
-  font-size: 0.75em;
-  margin-top: 0;
-}
 .speech-bubble {
   float: left;
   clear: left;
@@ -229,27 +205,87 @@ header h2 {
   -webkit-transform-origin: top left;
           transform-origin: top left;
 }
-.speech-bubble[data-scroll-in]:not([data-scroll-in="in"]) {
+.speech-bubble[data-click-in]:not([data-click-in="in"]),
+.speech-bubble[data-speech-bubble]:not([data-speech-bubble="in"]) {
   height: 0 !important;
   opacity: 0;
+  pointer-events: none;
 }
-.speech-bubble[data-scroll-in="in"] {
+.speech-bubble[data-speech-bubble="in"] {
   -webkit-animation: ShowSpeechBubble 600ms;
           animation: ShowSpeechBubble 600ms;
-}
-.speech-bubble[data-click-in]:not([data-click-in="in"]) {
-  height: 0 !important;
-  opacity: 0;
 }
 .speech-bubble[data-click-in="in"] {
   -webkit-animation: ShowSpeechBubble 600ms;
           animation: ShowSpeechBubble 600ms;
+}
+.speech-bubble.right {
+  float: right;
+  clear: none;
+}
+.speech-bubble.right > div {
+  border: 0;
+}
+.projects {
+  margin-right: -1em;
 }
 .project {
   margin-right: 1em;
 }
 .project ~ .project {
   clear: none;
+}
+.project ~ .project:last-child {
+  clear: left;
+}
+.project.half {
+  max-width: 450px;
+}
+.project > div {
+  -webkit-transition: background 500ms;
+  transition: background 500ms;
+}
+.project > div:hover {
+  -webkit-transition-duration: 150ms;
+          transition-duration: 150ms;
+}
+.pillow > div:hover {
+  background: #0258D2;
+}
+.bike > div:hover {
+  background: #4AB678;
+}
+.honey > div:hover {
+  background: #F69523;
+}
+.vermont > div:hover {
+  background: #CA3725;
+}
+.contact-info {
+  float: right;
+  font-size: 0.7em;
+}
+.contact-info h1,
+.contact-info ul,
+.contact-info li,
+.contact-info a {
+  display: inline-block;
+}
+.contact-info h1 {
+  padding: 0.25em;
+  margin-right: 1em;
+}
+.contact-info h1 span {
+  display: inline-block;
+}
+.contact-info h1 span:after {
+  content: ' |';
+}
+.contact-info h1 span:last-child:after {
+  content: none;
+}
+.contact-info a {
+  padding: 0.25em;
 }
 .vertical-center-outer {
   display: table;
