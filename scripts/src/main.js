@@ -10,12 +10,12 @@ $(function() {
   $('[data-show]').on('click', function(event) {
     event.preventDefault();
     var $btn = $(event.target).closest('[data-show]')
-    var showTarget = $btn.attr('data-show')
-    if(showTarget) {
-      $(showTarget).attr('data-click-in', 'in')
+    var target = $btn.attr('data-show')
+    if(target) {
+      showTarget(target)
       $btn.attr('disabled', 'disabled')
 
-      if(showTarget === '#contact' && $(window).scrollTop() > 0) {
+      if(target === '#contact' && $(window).scrollTop() > 0) {
         $('html,body').animate({
           scrollTop: 0
         }, 300)
@@ -36,7 +36,6 @@ $(function() {
     $html.on('keypress', function(event) {
       if(event.key === ' ' || typeof event.key === 'undefined') {
         thread.showAll()
-        $('[data-show="#contact"]').click()
       }
     })
 
@@ -64,6 +63,10 @@ function resizeBubbles() {
   }
 }
 
+function showTarget(target) {
+  $(target).attr('data-click-in', 'in')
+}
+
 function SpeechThread(el) {
   this.bubbles = document.querySelectorAll('[data-speech-bubble]')
   this.remaining = Array.prototype.slice.call(this.bubbles)
@@ -81,7 +84,11 @@ SpeechThread.prototype.showNext = function() {
     resizeBubbles()
     next.setAttribute('data-speech-bubble', 'in')
 
-    this.timer = setTimeout(this.showNext.bind(this), 2500)
+    if(this.remaining.length === 0) {
+      showTarget('#contact')
+    } else {
+      this.timer = setTimeout(this.showNext.bind(this), 2500)
+    }
   }
 }
 
@@ -89,4 +96,5 @@ SpeechThread.prototype.showAll = function() {
   clearTimeout(this.timer)
   $(this.remaining).attr('data-speech-bubble', 'in')
   this.remaining = []
+  showTarget('#contact')
 }

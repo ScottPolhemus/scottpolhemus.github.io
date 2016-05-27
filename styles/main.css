@@ -189,8 +189,8 @@ button[disabled] {
 .box,
 .speech-bubble > div {
   border: 3px solid;
-  padding: 0.5em;
-  margin-bottom: 1em;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
 }
@@ -225,6 +225,11 @@ button[disabled] {
 }
 .speech-bubble.right > div {
   border: 0;
+}
+@media (max-width: 639px) {
+  .speech-bubble {
+    width: 100%;
+  }
 }
 .projects {
   margin-right: -1em;
@@ -273,7 +278,7 @@ button[disabled] {
 }
 .contact-info h1 {
   padding: 0.25em;
-  margin-right: 1em;
+  margin-right: 0.5em;
 }
 .contact-info h1 span {
   display: inline-block;
@@ -286,6 +291,16 @@ button[disabled] {
 }
 .contact-info a {
   padding: 0.25em;
+}
+@media (max-width: 639px) {
+  .contact-info {
+    width: 100%;
+    text-align: center;
+  }
+  .contact-info h1,
+  .contact-info ul {
+    display: block;
+  }
 }
 .vertical-center-outer {
   display: table;
