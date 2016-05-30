@@ -8,7 +8,7 @@ $(function() {
   $window.on('resize', resizeBubbles);
 
   $('[data-show]').on('click', function(event) {
-    event.preventDefault();
+    event.preventDefault()
     var $btn = $(event.target).closest('[data-show]')
     var target = $btn.attr('data-show')
     if(target) {
@@ -26,8 +26,6 @@ $(function() {
   $html.one('typekit-finish', function() {
     var thread = new SpeechThread()
 
-    resizeBubbles()
-
     // Click to show next
     $html.on('click', function(event) {
       thread.showNext()
@@ -39,7 +37,11 @@ $(function() {
       }
     })
 
+    resizeBubbles()
+
     $body.addClass('ready')
+
+    thread.showNext()
   })
 
   // In case fonts are ready before JS runs...
@@ -71,8 +73,6 @@ function SpeechThread(el) {
   this.bubbles = document.querySelectorAll('[data-speech-bubble]')
   this.remaining = Array.prototype.slice.call(this.bubbles)
   this.timer = 0;
-
-  this.showNext()
 }
 
 SpeechThread.prototype.showNext = function() {
