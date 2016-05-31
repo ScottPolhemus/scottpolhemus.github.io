@@ -1,25 +1,26 @@
 var $ = require('jquery')
+var SpeechThread = require('./lib/speech-thread.js')
 
 $(function() {
   var $window = $(window)
   var $html = $('html')
   var $body = $('body')
 
-  $window.on('resize', resizeBubbles);
-
-  $('[data-show]').on('click', function(event) {
-    event.preventDefault()
-    var $btn = $(event.target).closest('[data-show]')
-    var target = $btn.attr('data-show')
+  $('[data-show-target]').on('click', function(event) {
+    var $btn = $(event.target).closest('[data-show-target]')
+    var target = $btn.attr('data-show-target')
     if(target) {
-      showTarget(target)
-      $btn.attr('disabled', 'disabled')
+      event.preventDefault()
+      $(target).attr('data-show', 'in')
 
       if(target === '#contact' && $(window).scrollTop() > 0) {
         $('html,body').animate({
           scrollTop: 0
         }, 300)
       }
+      
+      $btn.attr('disabled', 'disabled')
+      $btn.off('click')
     }
   })
 
@@ -38,6 +39,7 @@ $(function() {
     })
 
     resizeBubbles()
+    $window.on('resize', resizeBubbles)
 
     $body.addClass('ready')
 
@@ -63,38 +65,4 @@ function resizeBubbles() {
       el.setAttribute('style', 'height: '+contentHeight+'px')
     }
   }
-}
-
-function showTarget(target) {
-  $(target).attr('data-click-in', 'in')
-}
-
-function SpeechThread(el) {
-  this.bubbles = document.querySelectorAll('[data-speech-bubble]')
-  this.remaining = Array.prototype.slice.call(this.bubbles)
-  this.timer = 0;
-}
-
-SpeechThread.prototype.showNext = function() {
-  clearTimeout(this.timer)
-
-  if(this.remaining.length > 0) {
-    var next = this.remaining.shift()
-
-    resizeBubbles()
-    next.setAttribute('data-speech-bubble', 'in')
-
-    if(this.remaining.length === 0) {
-      showTarget('#contact')
-    } else {
-      this.timer = setTimeout(this.showNext.bind(this), 2500)
-    }
-  }
-}
-
-SpeechThread.prototype.showAll = function() {
-  clearTimeout(this.timer)
-  $(this.remaining).attr('data-speech-bubble', 'in')
-  this.remaining = []
-  showTarget('#contact')
 }

@@ -205,7 +205,7 @@ button[disabled] {
   -webkit-transform-origin: top left;
           transform-origin: top left;
 }
-.speech-bubble[data-click-in]:not([data-click-in="in"]),
+.speech-bubble[data-show]:not([data-show="in"]),
 .speech-bubble[data-speech-bubble]:not([data-speech-bubble="in"]) {
   height: 0 !important;
   opacity: 0;
@@ -215,7 +215,7 @@ button[disabled] {
   -webkit-animation: ShowSpeechBubble 600ms;
           animation: ShowSpeechBubble 600ms;
 }
-.speech-bubble[data-click-in="in"] {
+.speech-bubble[data-show="in"] {
   -webkit-animation: ShowSpeechBubble 600ms;
           animation: ShowSpeechBubble 600ms;
 }
