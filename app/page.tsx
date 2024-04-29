@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { WordPressPost } from '@/types'
 
 export default async function Home() {
@@ -14,7 +15,11 @@ export default async function Home() {
             key={`post-${index}`}
             className="mb-4 border-b border-black pb-4 last:mb-0 last:border-b-0"
           >
-            <h3 className="mb-2 font-serif text-xl">{post.title.rendered}</h3>
+            <h3 className="mb-2 font-serif text-xl">
+              <Link className="hover:underline" href={`/posts/${post.slug}`}>
+                {post.title.rendered}
+              </Link>
+            </h3>
             <div
               className="rich-text"
               dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
