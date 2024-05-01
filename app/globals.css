@@ -4,6 +4,8 @@
 
 /* Styling for "rich text" content produced in WordPress editor */
 .rich-text {
+  @apply text-lg;
+
   p,
   h1,
   h2,
@@ -42,6 +44,10 @@
     @apply font-serif text-lg;
   }
 
+  p {
+    
+  }
+
   ul {
     @apply list-inside list-disc;
   }
@@ -52,6 +58,10 @@
 
   blockquote {
     @apply p-4 font-serif text-2xl italic;
+  }
+
+  pre {
+    @apply text-sm;
   }
 
   a {
@@ -93,6 +103,6 @@
   }
 
   .wp-block-syntaxhighlighter-code {
-    @apply overflow-scroll bg-gray-100 p-4;
+    @apply p-4 bg-chardonnay-100 rounded-md overflow-scroll;
   }
 }
