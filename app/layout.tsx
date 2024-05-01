@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import './globals.css'
+import type { Metadata } from 'next'
+
 import { WordPressPost } from '@/types'
+
+export const metadata: Metadata = {
+  title: "The personal blog of Scott Polhemus"
+};
 
 export default async function RootLayout({
   children,
