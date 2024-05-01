@@ -1,7 +1,5 @@
-import type { Metadata } from 'next'
+import Link from 'next/link'
 import './globals.css'
-
-export const metadata: Metadata = {}
 
 export default function RootLayout({
   children,
@@ -10,7 +8,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <header className="px-4">
+          <h1 className="font-bold text-xl">
+            <Link href="/">Next WordPress Blog</Link>
+          </h1>
+        </header>
+        {children}
+      </body>
     </html>
   )
 }
