@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "serve ./out",
     "lint": "next lint"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "postcss": "^8",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "serve": "^14.2.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
