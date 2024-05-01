@@ -1,5 +1,6 @@
 import moment from 'moment'
 import type { WordPressPost } from '@/types'
+import { convert } from 'html-to-text'
 
 type PostParams = {
   slug: string
@@ -11,8 +12,8 @@ export async function generateMetadata({ params }: { params: PostParams }) {
   ).then((res) => res.json())) as WordPressPost[]
 
   return {
-    title: post.title.rendered,
-    description: post.excerpt.rendered
+    title: convert(post.title.rendered, { wordwrap: false }),
+    description: convert(post.excerpt.rendered, { wordwrap: false })
   }
 }
 
