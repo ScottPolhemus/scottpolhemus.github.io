@@ -13,7 +13,8 @@
   h6,
   ul,
   ol,
-  blockquote {
+  blockquote,
+  .wp-block-syntaxhighlighter-code {
     @apply mb-4;
   }
 
@@ -89,5 +90,9 @@
 
   .has-xx-large-font-size {
     @apply text-5xl;
+  }
+
+  .wp-block-syntaxhighlighter-code {
+    @apply overflow-scroll bg-gray-100 p-4;
   }
 }

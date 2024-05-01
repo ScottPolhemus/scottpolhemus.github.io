@@ -1,3 +1,4 @@
+import moment from 'moment'
 import type { WordPressPost } from '@/types'
 
 export async function generateStaticParams() {
@@ -19,9 +20,13 @@ export default async function PostSingle({
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 font-serif text-5xl">{post.title.rendered}</h1>
+      <h1
+        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+        className="mb-4 font-serif text-5xl text-center"
+      />
+      <p className="text-center text-sm mb-4">{moment(post.date).format("dddd, MMMM Do YYYY")}</p>
       <div
-        className="rich-text"
+        className="rich-text max-w-3xl mx-auto"
         dangerouslySetInnerHTML={{ __html: post.content.rendered }}
       />
     </div>

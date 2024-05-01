@@ -17,7 +17,9 @@ export default async function Home() {
           >
             <h3 className="mb-2 font-serif text-xl">
               <Link className="hover:underline" href={`/posts/${post.slug}`}>
-                {post.title.rendered}
+                <span
+                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                />
               </Link>
             </h3>
             <div
