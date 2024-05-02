@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WORDPRESS_COM_DOMAIN: ${{ vars.WORDPRESS_COM_DOMAIN }}
+      NEXT_PUBLIC_CLARITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_CLARITY_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -14,3 +14,10 @@ export interface WordPressPost {
     name: string
   }
 }
+
+export interface WordPressTag {
+  id: string
+  name: string
+  description: string
+  slug: string
+}
