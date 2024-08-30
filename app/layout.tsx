@@ -29,7 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const [aboutPage] = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/pages?slug=about&ts=1`
+    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/pages?slug=about&ts=2`
   ).then((res) => res.json())) as WordPressPost[]
 
   return (
