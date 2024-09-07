@@ -8,7 +8,7 @@ type PostParams = {
 
 export async function generateMetadata({ params }: { params: PostParams }) {
   const [post] = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?slug=${params.slug}`
+    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?slug=${params.slug}&ts=${Date.now()}`
   ).then((res) => res.json())) as WordPressPost[]
 
   return {
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: PostParams }) {
 
 export async function generateStaticParams() {
   const posts = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts`
+    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?ts=${Date.now()}`
   ).then((res) => res.json())) as WordPressPost[]
 
   return posts.map(({ slug }) => ({ slug }))
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 
 export default async function PostSingle({ params }: { params: PostParams }) {
   const [post] = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?slug=${params.slug}`
+    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?slug=${params.slug}&ts=${Date.now()}`
   ).then((res) => res.json())) as WordPressPost[]
 
   return (
