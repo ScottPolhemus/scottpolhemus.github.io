@@ -14,6 +14,13 @@ export async function generateMetadata({ params }: { params: PostParams }) {
   return {
     title: convert(post.title.rendered, { wordwrap: false }),
     description: convert(post.excerpt.rendered, { wordwrap: false }),
+    openGraph: {
+      images: [
+        post.jetpack_featured_media_url && {
+          url: post.jetpack_featured_media_url,
+        },
+      ].filter(Boolean),
+    },
   }
 }
 
@@ -32,7 +39,7 @@ export default async function PostSingle({ params }: { params: PostParams }) {
 
   return (
     <div className="p-4">
-      <div className="md:text-center mb-4">
+      <div className="mb-4 md:text-center">
         <h1
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           className="mx-auto mb-2 max-w-5xl font-serif text-5xl font-light"

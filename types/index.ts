@@ -13,6 +13,7 @@ export interface WordPressPost {
   author: {
     name: string
   }
+  jetpack_featured_media_url: string
 }
 
 export interface WordPressTag {

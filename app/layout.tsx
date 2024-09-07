@@ -34,9 +34,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${crimsonPro.variable} ${rubik.variable}`}>
-      <body className="bg-chardonnay-200 flex min-h-[100vh] flex-col">
-        <header className="px-4">
-          <h1 className="text-golden-bell-900 text-2xl font-semibold hover:underline">
+      <body className="flex min-h-[100vh] flex-col bg-chardonnay-200">
+        <header className="px-4 pt-2">
+          <h1 className="text-2xl font-semibold text-golden-bell-900 hover:underline">
             <Link href="/">The personal blog of Scott Polhemus</Link>
           </h1>
         </header>
