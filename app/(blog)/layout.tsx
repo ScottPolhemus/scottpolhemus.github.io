@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
 
-import './globals.css'
+import '../globals.css'
 import { WordPressPost } from '@/types'
 
 export const metadata: Metadata = {

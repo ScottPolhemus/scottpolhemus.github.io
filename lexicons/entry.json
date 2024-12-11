@@ -1,0 +1,48 @@
+{
+  "lexicon": 1,
+  "id": "us.polhem.blog.entry",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A declaration of a post.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "blobs": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "us.polhem.blog.defs#blobMetadata"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "public",
+              "url",
+              "author"
+            ],
+            "default": "public",
+            "description": "Tells the visibility of the article to AppView."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "us.polhem.blog.defs",
+  "defs": {
+    "blobMetadata": {
+      "type": "object",
+      "required": [
+        "blobref"
+      ],
+      "properties": {
+        "blobref": {
+          "type": "blob",
+          "accept": [
+            "*/*"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

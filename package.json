@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.7",
+    "@atproto/api": "^0.13.19",
+    "@atproto/common-web": "^0.3.1",
+    "@atproto/oauth-client-browser": "^0.3.3",
     "html-to-text": "^9.0.5",
     "moment": "^2.30.1",
     "next": "14.2.8",
