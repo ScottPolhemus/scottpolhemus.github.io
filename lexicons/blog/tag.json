@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "us.polhem.blog.tag",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Record describing a blog tag.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "name",
+          "slug",
+          "description",
+          "createdAt"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

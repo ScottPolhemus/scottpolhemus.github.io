@@ -5,7 +5,8 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 import '../globals.css'
-import { WordPressPost } from '@/types'
+import { Agent } from '@atproto/api'
+import Markdown from 'react-markdown'
 
 export const metadata: Metadata = {
   title: 'The personal blog of Scott Polhemus',
@@ -28,31 +29,38 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const [aboutPage] = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/pages?slug=about&ts=${Date.now()}`
-  ).then((res) => res.json())) as WordPressPost[]
+  const agent = new Agent('https://bsky.social')
+
+  const { data } = await agent.com.atproto.repo.listRecords({
+    repo: process.env.NEXT_PUBLIC_ATPROTO_DID,
+    collection: 'us.polhem.blog.content',
+  })
+  const aboutContent = data.records.find((r) => {
+    return r.value.slug === 'about'
+  })
 
   return (
     <html lang="en" className={`${crimsonPro.variable} ${rubik.variable}`}>
       <body className="flex min-h-[100vh] flex-col bg-chardonnay-200">
         <header className="px-4 pt-2">
-          <h1 className="text-2xl font-semibold text-golden-bell-900 hover:underline">
+          <h1 className="mx-auto max-w-7xl text-2xl font-semibold text-golden-bell-900 hover:underline">
             <Link href="/">The personal blog of Scott Polhemus</Link>
           </h1>
         </header>
         <main className="flex-1">{children}</main>
         <footer className="bg-golden-bell-900 p-4 text-white [&_a]:text-white">
-          <Image
-            alt="Scott Polhemus"
-            className="float-right ml-2 h-[100px] w-[100px] rounded-full"
-            width="200"
-            height="200"
-            src="/profile.png"
-          />
-          <div
-            dangerouslySetInnerHTML={{ __html: aboutPage.content.rendered }}
-            className="rich-text"
-          ></div>
+          <div className="mx-auto max-w-7xl">
+            <Image
+              alt="Scott Polhemus"
+              className="float-right ml-2 h-[100px] w-[100px] rounded-full"
+              width="200"
+              height="200"
+              src="/profile.png"
+            />
+            <div className="rich-text">
+              <Markdown>{aboutContent?.value.content}</Markdown>
+            </div>
+          </div>
         </footer>
         <Script id="clarity-script" strategy="afterInteractive">
           {`

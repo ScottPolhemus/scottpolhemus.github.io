@@ -6,6 +6,16 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'text-left',
+    'text-right',
+    'text-center',
+    'text-sm',
+    'text-base',
+    'text-2xl',
+    'text-4xl',
+    'text-5xl',
+  ],
   theme: {
     extend: {
       fontFamily: {

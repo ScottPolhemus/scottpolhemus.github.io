@@ -37,9 +37,10 @@ export default function AdminProvider({ children }: { children: ReactNode }) {
           clientMetadata,
           handleResolver: 'https://bsky.social',
         })
-        setOAuth(oAuthClient)
 
         oAuthClient.init().then((result) => {
+          setOAuth(oAuthClient)
+
           if (!!result && 'session' in result) {
             setSession(result.session)
             setAgent(new Agent(result.session))
@@ -57,7 +58,7 @@ export default function AdminProvider({ children }: { children: ReactNode }) {
         agent,
       }}
     >
-      {children}
+      {!oAuth ? 'Loading...' : children}
     </AdminContext.Provider>
   )
 }

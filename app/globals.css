@@ -16,7 +16,7 @@
   ul,
   ol,
   blockquote,
-  .wp-block-syntaxhighlighter-code {
+  pre {
     @apply mb-4;
   }
 
@@ -57,6 +57,10 @@
 
   blockquote {
     @apply border-l-4 border-black p-4 font-serif text-2xl italic;
+
+    > p:last-child {
+      @apply mb-0;
+    }
   }
 
   pre {
@@ -101,7 +105,7 @@
     @apply text-5xl;
   }
 
-  .wp-block-syntaxhighlighter-code {
+  pre {
     @apply overflow-scroll rounded-md bg-chardonnay-100 p-4;
   }
 

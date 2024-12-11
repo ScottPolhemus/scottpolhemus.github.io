@@ -4,32 +4,50 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "A declaration of a post.",
+      "description": "Record describing a blog post entry.",
       "key": "tid",
       "record": {
         "type": "object",
         "required": [
-          "content"
+          "title",
+          "content",
+          "slug",
+          "createdAt"
         ],
         "properties": {
-          "content": {
-            "type": "string",
-            "maxLength": 100000
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "datetime"
-          },
           "title": {
             "type": "string",
             "maxLength": 1000
           },
-          "blobs": {
+          "content": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "tags": {
             "type": "array",
             "items": {
               "type": "ref",
-              "ref": "us.polhem.blog.defs#blobMetadata"
+              "ref": "us.polhem.blog.tag"
             }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "us.polhem.blog.image"
+            }
+          },
+          "featuredImage": {
+            "type": "ref",
+            "ref": "us.polhem.blog.image"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
           },
           "visibility": {
             "type": "string",
