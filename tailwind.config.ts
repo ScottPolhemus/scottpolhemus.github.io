@@ -7,14 +7,14 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   safelist: [
-    'text-left',
-    'text-right',
-    'text-center',
-    'text-sm',
-    'text-base',
-    'text-2xl',
-    'text-4xl',
-    'text-5xl',
+    // 'text-left',
+    // 'text-right',
+    // 'text-center',
+    // 'text-sm',
+    // 'text-base',
+    // 'text-2xl',
+    // 'text-4xl',
+    // 'text-6xl',
   ],
   theme: {
     extend: {

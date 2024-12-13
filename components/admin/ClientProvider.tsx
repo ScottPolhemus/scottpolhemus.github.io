@@ -1,10 +1,5 @@
 'use client'
 
-import type {
-  BrowserOAuthClient,
-  OAuthSession,
-} from '@atproto/oauth-client-browser'
-import { Agent } from '@atproto/api'
 import {
   ReactNode,
   createContext,
@@ -12,23 +7,30 @@ import {
   useEffect,
   useState,
 } from 'react'
+import type {
+  BrowserOAuthClient,
+  OAuthSession,
+} from '@atproto/oauth-client-browser'
 
-import { clientMetadata } from '@/app/(admin)/admin/oauth/client-metadata.json/route'
+import { clientMetadata } from '@/app/oauth/client-metadata.json/route'
+import { BlogClient } from '@/services/blog'
 
-// import { AppBskyActorDefs } from '@atproto/api'
-
-export type AdminContextValue = {
+export type AdminClientContextValue = {
   oAuth?: BrowserOAuthClient
   session?: OAuthSession
-  agent?: Agent
+  blog?: BlogClient
 }
 
-const AdminContext = createContext<AdminContextValue>({})
+const AdminClientContext = createContext<AdminClientContextValue | null>(null)
 
-export default function AdminProvider({ children }: { children: ReactNode }) {
+export default function AdminClientProvider({
+  children,
+}: {
+  children: ReactNode
+}) {
   const [oAuth, setOAuth] = useState<BrowserOAuthClient>()
   const [session, setSession] = useState<OAuthSession>()
-  const [agent, setAgent] = useState<Agent>()
+  const [blog, setBlog] = useState<BlogClient>()
 
   useEffect(() => {
     import('@atproto/oauth-client-browser').then(
@@ -43,7 +45,7 @@ export default function AdminProvider({ children }: { children: ReactNode }) {
 
           if (!!result && 'session' in result) {
             setSession(result.session)
-            setAgent(new Agent(result.session))
+            setBlog(new BlogClient(result.session))
           }
         })
       }
@@ -51,20 +53,24 @@ export default function AdminProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AdminContext.Provider
+    <AdminClientContext.Provider
       value={{
         oAuth,
         session,
-        agent,
+        blog,
       }}
     >
       {!oAuth ? 'Loading...' : children}
-    </AdminContext.Provider>
+    </AdminClientContext.Provider>
   )
 }
 
-export function useAdmin() {
-  const admin = useContext(AdminContext)
+export function useClient() {
+  const admin = useContext(AdminClientContext)
+
+  if (!admin) {
+    throw new Error('Missing admin context provider')
+  }
 
   return admin
 }

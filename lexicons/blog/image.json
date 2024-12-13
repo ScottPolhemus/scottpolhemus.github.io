@@ -27,7 +27,7 @@
         },
         "aspectRatio": {
           "type": "ref",
-          "ref": "us.polhem.embed.defs#aspectRatio"
+          "ref": "us.polhem.blog.defs#aspectRatio"
         }
       }
     }

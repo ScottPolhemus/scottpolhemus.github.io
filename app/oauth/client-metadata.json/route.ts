@@ -2,7 +2,7 @@ import type { NextMiddleware } from 'next/server'
 import type { OAuthClientMetadataInput } from '@atproto/oauth-client-browser'
 
 export const clientMetadata: OAuthClientMetadataInput = {
-  client_id: `${process.env.NEXT_PUBLIC_APP_HOST}/admin/oauth/client-metadata.json`,
+  client_id: `${process.env.NEXT_PUBLIC_APP_HOST}/oauth/client-metadata.json`,
   client_name: 'Polhem.us Admin',
   client_uri: process.env.NEXT_PUBLIC_APP_HOST,
   redirect_uris: [`${process.env.NEXT_PUBLIC_APP_HOST}/admin`],

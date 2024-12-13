@@ -4,6 +4,7 @@ import PostDate from '@/components/PostDate'
 import { Agent } from '@atproto/api'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import { BlogClient } from '@/services/blog'
 
 type PostParams = {
   slug: string
@@ -37,30 +38,24 @@ export async function generateMetadata({ params }: { params: PostParams }) {
 }
 
 export async function generateStaticParams() {
-  const agent = new Agent('https://bsky.social')
+  const blog = new BlogClient()
+  const posts = await blog.listEntries()
 
-  const { data } = await agent.com.atproto.repo.listRecords({
-    repo: process.env.NEXT_PUBLIC_ATPROTO_DID,
-    collection: 'us.polhem.blog.entry',
-  })
-
-  const posts = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?ts=${Date.now()}`
-  ).then((res) => res.json())) as WordPressPost[]
-
-  return data.records.map((record) => ({ slug: record.value.slug }))
+  return posts.map((record) => ({ slug: record.value.slug }))
 }
 
 export default async function PostSingle({ params }: { params: PostParams }) {
-  const agent = new Agent('https://bsky.social')
+  const blog = new BlogClient()
+  const post = await blog.findEntry({ slug: params.slug })
 
-  const { data } = await agent.com.atproto.repo.listRecords({
-    repo: process.env.NEXT_PUBLIC_ATPROTO_DID as string,
-    collection: 'us.polhem.blog.entry',
-  })
-  const post = data.records.find((record) => {
-    return record.value.slug === params.slug
-  })
+  const postContent = post?.value.content.replaceAll(
+    /src="\.\/([^"]*)"/gm,
+    (match, filename) => {
+      const image = post.value.images?.find((i) => i.filename === filename)
+
+      return `src="https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${image?.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}"`
+    }
+  )
 
   return (
     <div className="p-4">
@@ -73,7 +68,7 @@ export default async function PostSingle({ params }: { params: PostParams }) {
         </p>
       </div>
       <div className="rich-text mx-auto max-w-3xl">
-        <Markdown rehypePlugins={[rehypeRaw]}>{post?.value.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]}>{postContent}</Markdown>
       </div>
     </div>
   )

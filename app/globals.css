@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.button {
+  @apply rounded-full bg-gray-500 px-4 py-2 text-white hover:underline;
+}
+
 /* Styling for "rich text" content produced in WordPress editor */
 .rich-text {
   @apply text-lg;
@@ -55,6 +59,10 @@
     @apply list-inside list-decimal;
   }
 
+  a {
+    @apply text-blue-600 underline hover:text-blue-400;
+  }
+
   blockquote {
     @apply border-l-4 border-black p-4 font-serif text-2xl italic;
 
@@ -64,68 +72,24 @@
   }
 
   pre {
-    @apply text-sm;
+    @apply overflow-scroll rounded-md bg-chardonnay-100 p-4 text-sm;
   }
 
-  a {
-    @apply text-blue-600 underline hover:text-blue-400;
+  figure {
+    @apply mb-4 table;
   }
 
-  /* WordPress editor formatting classes */
-
-  .has-text-align-left {
-    @apply text-left;
+  figcaption {
+    @apply mb-4 mt-2 table-caption caption-bottom text-sm;
   }
 
-  .has-text-align-right {
-    @apply text-right;
+  /* Editor formatting classes */
+
+  .figure-left {
+    @apply float-left mb-0 mr-2 max-w-[40%] md:max-w-full;
   }
 
-  .has-text-align-center {
-    @apply text-center;
-  }
-
-  .has-small-font-size {
-    @apply text-sm;
-  }
-
-  .has-medium-font-size {
-    @apply text-base;
-  }
-
-  .has-large-font-size {
-    @apply text-2xl;
-  }
-
-  .has-x-large-font-size {
-    @apply text-4xl;
-  }
-
-  .has-xx-large-font-size {
-    @apply text-5xl;
-  }
-
-  pre {
-    @apply overflow-scroll rounded-md bg-chardonnay-100 p-4;
-  }
-
-  .wp-block-image {
-    @apply !mb-4 !table;
-  }
-
-  .wp-block-image.alignleft {
-    @apply !float-left !mb-0 !mr-2 !max-w-[40%] md:!max-w-full;
-  }
-
-  .wp-block-image.alignright {
-    @apply !float-right !mb-0 !ml-2 !max-w-[40%] md:!max-w-full;
-  }
-
-  .wp-block-image img {
-    @apply !cursor-default;
-  }
-
-  .wp-element-caption {
-    @apply mb-4 mt-2 !table-caption caption-bottom text-sm;
+  .figure-right {
+    @apply float-right mb-0 ml-2 max-w-[40%] md:max-w-full;
   }
 }

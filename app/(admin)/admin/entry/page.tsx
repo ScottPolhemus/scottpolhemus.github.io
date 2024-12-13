@@ -2,15 +2,15 @@
 
 import { redirect } from 'next/navigation'
 
-import AdminContentForm from '@/components/admin/ContentForm'
+import AdminEntryForm from '@/components/admin/EntryForm'
 import { useClient } from '@/components/admin/ClientProvider'
 
-export default function AdminContentPage() {
+export default function AdminEntryPage() {
   const { session } = useClient()
 
   if (!session?.sub) {
     return redirect('/admin')
   }
 
-  return <AdminContentForm />
+  return <AdminEntryForm />
 }

@@ -30,8 +30,9 @@
           "tags": {
             "type": "array",
             "items": {
-              "type": "ref",
-              "ref": "us.polhem.blog.tag"
+              "type": "string",
+              "format": "at-uri",
+              "description": "Reference (AT-URI) to a tag record (us.polhem.blog.tag)."
             }
           },
           "images": {

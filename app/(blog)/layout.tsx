@@ -10,6 +10,15 @@ import Markdown from 'react-markdown'
 
 export const metadata: Metadata = {
   title: 'The personal blog of Scott Polhemus',
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          url: `${process.env.NEXT_PUBLIC_APP_HOST}/rss.xml`,
+        },
+      ],
+    },
+  },
 }
 
 const crimsonPro = Crimson_Pro({

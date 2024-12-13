@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 
-import AdminContentForm from '@/components/admin/ContentForm'
+import AdminTagForm from '@/components/admin/TagForm'
 import { useClient } from '@/components/admin/ClientProvider'
 
 export default function AdminContentPage() {
@@ -12,5 +12,5 @@ export default function AdminContentPage() {
     return redirect('/admin')
   }
 
-  return <AdminContentForm />
+  return <AdminTagForm />
 }
