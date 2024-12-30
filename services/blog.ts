@@ -6,13 +6,19 @@ import { Record as EntryRecord } from '@/app/__generated__/lexicons/types/us/pol
 import { Record as ContentRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/content'
 import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
+export type ImageInput = Omit<UsPolhemBlogImage.Main, 'image'> &
+  (
+    | {
+        image: UsPolhemBlogImage.Main['image']
+      }
+    | {
+        imageFile: File
+      }
+  )
 
-type CreateEntryInput = Exclude<EntryRecord, 'featuredImage' | 'images'> & {
-  featuredImage: Optional<UsPolhemBlogImage.Main, 'image'>
-  featuredImageFile?: File
-  images: Array<Optional<UsPolhemBlogImage.Main, 'image'>>
-  imageFiles?: File[]
+export type CreateEntryInput = EntryRecord & {
+  featuredImage?: ImageInput
+  images?: ImageInput[]
 }
 
 export class BlogClient {
@@ -126,12 +132,16 @@ export class BlogClient {
     })
   }
 
-  async createEntry(data: CreateEntryInput) {
-    const { featuredImageFile, imageFiles, ...record } = data
+  async _prepareEntryRecord({
+    featuredImage,
+    images,
+    ...record
+  }: CreateEntryInput): Promise<EntryRecord> {
+    const allImageFiles = [
+      featuredImage?.imageFile as File,
+      ...(images?.map(({ imageFile }) => imageFile as File) || []),
+    ].filter((f) => !!f)
 
-    const allImageFiles = [featuredImageFile, ...(imageFiles || [])].filter(
-      (i) => !!i
-    )
     const imageFileBlobs: Record<
       string,
       Awaited<
@@ -148,54 +158,34 @@ export class BlogClient {
       })
     )
 
-    // const tagRecords = await Promise.all(
-    //   tags.map((slug) => this.findTag({ slug }))
-    // )
+    const data = record as EntryRecord
 
-    const featuredImage = featuredImageFile
-      ? {
-          ...record.featuredImage,
-          image: new BlobRef(
-            imageFileBlobs[featuredImageFile.name].blob.ref,
-            imageFileBlobs[featuredImageFile.name].blob.mimeType,
-            imageFileBlobs[featuredImageFile.name].blob.size
-          ),
-        }
-      : record.featuredImage
+    if (featuredImage) {
+      data.featuredImage = {
+        ...featuredImage,
+        image: featuredImage.image || imageFileBlobs[featuredImage.filename],
+      }
+    }
 
-    // const images = record.images.map((image) => )
+    if (images?.length) {
+      data.images = images.map((image) => ({
+        ...image,
+        image: image.image || imageFileBlobs[image.filename],
+      }))
+    }
+
+    return data
+  }
+
+  async createEntry(data: CreateEntryInput) {
+    const record = await this._prepareEntryRecord(data)
 
     // Create blog entry
     return this._blog.entry.create(
       {
         repo: this._did,
       },
-      {
-        ...(record as EntryRecord),
-        featuredImage,
-        // images: [
-        //   ...(record.images || []),
-        //   ...imageFiles.map((imageFile) => ({
-        //     filename: imageFile.name,
-        //     image: new BlobRef(
-        //       imageFileBlobs[imageFile.name].blob.ref,
-        //       imageFileBlobs[imageFile.name].blob.mimeType,
-        //       imageFileBlobs[imageFile.name].blob.size
-        //     ),
-        //     alt: '',
-        //   })),
-        // ],
-        // images: images.map((imageFile) => ({
-        //   filename: imageFile.name,
-        //   image: new BlobRef(
-        //     imageFileBlobs[imageFile.name].blob.ref,
-        //     imageFileBlobs[imageFile.name].blob.mimeType,
-        //     imageFileBlobs[imageFile.name].blob.size
-        //   ),
-        //   alt: '',
-        // })),
-        // tags: tagRecords.filter((t) => !!t).map(({ uri }) => uri),
-      }
+      record
     )
   }
 
@@ -208,58 +198,13 @@ export class BlogClient {
   }
 
   async updateEntry(rkey: string, data: CreateEntryInput) {
-    // const { images, featuredImage, tags, ...record } = data
-
-    // const imageFiles = [featuredImage, ...images].filter((i) => !!i)
-    // const imageFileBlobs: Record<
-    //   string,
-    //   Awaited<
-    //     ReturnType<typeof this._agent.com.atproto.repo.uploadBlob>
-    //   >['data']
-    // > = {}
-
-    // // Upload image file blobs and store references
-    // await Promise.all(
-    //   imageFiles.map(async (imageFile) => {
-    //     const response =
-    //       await this._agent.com.atproto.repo.uploadBlob(imageFile)
-    //     imageFileBlobs[imageFile.name] = response.data
-    //   })
-    // )
-
-    // const tagRecords = await Promise.all(
-    //   tags.map((slug) => this.findTag({ slug }))
-    // )
+    const record = await this._prepareEntryRecord(data)
 
     return this._agent.com.atproto.repo.putRecord({
       repo: this._did,
       collection: 'us.polhem.blog.entry',
       rkey,
-      record: data,
-      // record: {
-      //   ...(record as EntryRecord),
-      //   featuredImage: featuredImage
-      //     ? {
-      //         filename: featuredImage.name,
-      //         image: new BlobRef(
-      //           imageFileBlobs[featuredImage.name].blob.ref,
-      //           imageFileBlobs[featuredImage.name].blob.mimeType,
-      //           imageFileBlobs[featuredImage.name].blob.size
-      //         ),
-      //         alt: '',
-      //       }
-      //     : undefined,
-      //   images: images.map((imageFile) => ({
-      //     filename: imageFile.name,
-      //     image: new BlobRef(
-      //       imageFileBlobs[imageFile.name].blob.ref,
-      //       imageFileBlobs[imageFile.name].blob.mimeType,
-      //       imageFileBlobs[imageFile.name].blob.size
-      //     ),
-      //     alt: '',
-      //   })),
-      //   tags: tagRecords.filter((t) => !!t).map(({ uri }) => uri),
-      // },
+      record,
     })
   }
 

@@ -1,44 +1,40 @@
-import type { WordPressTag } from '@/types'
+import { BlogClient } from '@/services/blog'
 import PostsList from '@/components/PostsList'
 
 type TagParams = {
   slug: string
 }
 
+const blog = new BlogClient()
+
 export async function generateMetadata({ params }: { params: TagParams }) {
-  const tags = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/tags`
-  ).then((res) => res.json())) as WordPressTag[]
-  const tag = tags.find(({ slug }) => slug == params.slug)
+  const tags = await blog.listTags()
+  const tag = tags.find(({ value }) => value.slug === params.slug)
 
   return {
-    title: tag?.name,
-    description: tag?.description,
+    title: tag?.value.name,
+    description: tag?.value.description,
   }
 }
 
 export async function generateStaticParams() {
-  const tags = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/tags`
-  ).then((res) => res.json())) as WordPressTag[]
-
-  return tags.map(({ slug }) => ({
-    slug,
+  const tags = await blog.listTags()
+  return tags.map(({ value }) => ({
+    slug: value.slug,
   }))
 }
 
 export default async function TagSingle({ params }: { params: TagParams }) {
-  const tags = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/tags`
-  ).then((res) => res.json())) as WordPressTag[]
-  const tag = tags.find(({ slug }) => slug == params.slug) as WordPressTag
+  const tags = await blog.listTags()
+  const tag = tags.find(({ value }) => value.slug === params.slug)
+  console.log({ tag })
 
   return (
     <div className="p-4">
       <h2 className="mb-2 text-xs font-medium uppercase">
-        Posts tagged &ldquo;{tag?.name}&rdquo;
+        Posts tagged &ldquo;{tag?.value.name}&rdquo;
       </h2>
-      <PostsList tags={[tag]} />
+      <PostsList tag={tag} />
     </div>
   )
 }

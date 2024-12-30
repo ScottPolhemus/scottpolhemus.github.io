@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.button {
-  @apply rounded-full bg-gray-500 px-4 py-2 text-white hover:underline;
-}
-
 /* Styling for "rich text" content produced in WordPress editor */
 .rich-text {
   @apply text-lg;

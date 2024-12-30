@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { Crimson_Pro, Rubik } from 'next/font/google'
+import { Navbar, NavbarBrand } from '@nextui-org/react'
 
-import AdminProvider from '@/components/admin/ClientProvider'
+import AdminProvider from '@/components/admin/AdminProvider'
 import '../globals.css'
 
 export const metadata = {
@@ -29,14 +30,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${crimsonPro.variable} ${rubik.variable}`}>
         <AdminProvider>
-          <div className="p-4">
-            <header className="mb-4">
-              <h1 className="font-sans text-3xl">
-                <Link href="/admin">Polhem.us Admin</Link>
+          <Navbar>
+            <NavbarBrand>
+              <h1 className="font-sans text-2xl">
+                <Link href="/admin">Polhem.us Dashboard</Link>
               </h1>
-            </header>
-            <main>{children}</main>
-          </div>
+            </NavbarBrand>
+          </Navbar>
+          <main>{children}</main>
         </AdminProvider>
       </body>
     </html>

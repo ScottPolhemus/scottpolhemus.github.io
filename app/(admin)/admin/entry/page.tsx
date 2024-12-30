@@ -3,10 +3,10 @@
 import { redirect } from 'next/navigation'
 
 import AdminEntryForm from '@/components/admin/EntryForm'
-import { useClient } from '@/components/admin/ClientProvider'
+import { useAdmin } from '@/components/admin/AdminProvider'
 
 export default function AdminEntryPage() {
-  const { session } = useClient()
+  const { session } = useAdmin()
 
   if (!session?.sub) {
     return redirect('/admin')

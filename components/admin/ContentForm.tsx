@@ -5,10 +5,10 @@ import moment from 'moment'
 import { useRouter } from 'next/navigation'
 
 import { Record as ContentRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/content'
-import { useClient } from '@/components/admin/ClientProvider'
+import { useAdmin } from '@/components/admin/AdminProvider'
 
 export default function AdminContentForm() {
-  const { blog } = useClient()
+  const { blog } = useAdmin()
   const [record, setRecord] = useState<{
     uri: string
     value: ContentRecord

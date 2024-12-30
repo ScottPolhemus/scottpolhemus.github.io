@@ -1,29 +1,27 @@
-import { ComponentProps } from 'react'
 import Link from 'next/link'
-import { WordPressPost, WordPressTag } from '@/types'
 import PostDate from '@/components/PostDate'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 
-import { UsPolhemBlogEntry } from '@/app/__generated__/lexicons'
 import { BlogClient } from '@/services/blog'
-import Image from 'next/image'
+import { getBlogPostExcerpt } from '@/utils/blog'
 
-export default async function PostsList({ tags }: { tags?: WordPressTag[] }) {
-  const params = {} as Record<string, string>
-
-  if (typeof tags !== 'undefined') {
-    tags.forEach((tag, index) => {
-      params[`tags[${index}]`] = tag.id
-    })
-  }
-
+export default async function PostsList({
+  tag,
+}: {
+  tag: { uri: string; value: TagRecord }
+}) {
   const client = new BlogClient()
-  const entryRecords = await client.listEntries()
+  let results = await client.listEntries()
+
+  if (tag) {
+    results = results.filter(({ value }) => value.tags?.includes(tag.uri))
+  }
 
   return (
     <ul className="mx-auto max-w-7xl">
-      {entryRecords.map((record) => (
+      {results.map((record) => (
         <li
           key={record.uri}
           className="mb-4 border-b border-black pb-4 last:mb-0 last:border-b-0"
@@ -41,7 +39,7 @@ export default async function PostsList({ tags }: { tags?: WordPressTag[] }) {
                 allowedElements={['p', 'strong']}
                 className="line-clamp-2"
               >
-                {record.value.content}
+                {getBlogPostExcerpt(record.value)}
               </Markdown>
             </div>
           </Link>

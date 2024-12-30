@@ -1,6 +1,6 @@
 {
-  "name": "next-wordpress-blog",
-  "version": "0.1.0",
+  "name": "polhem.us",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,15 +10,17 @@
     "lexicons": "lex gen-api ./app/__generated__/lexicons ./lexicons/blog/*"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.19",
+    "@atproto/api": "^0.13.23",
     "@atproto/common-web": "^0.3.1",
-    "@atproto/oauth-client-browser": "^0.3.3",
+    "@atproto/oauth-client-browser": "^0.3.5",
+    "@nextui-org/react": "^2.6.8",
     "@tiptap/extension-placeholder": "^2.10.3",
     "@tiptap/react": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
     "feed": "^4.2.2",
     "html-to-text": "^9.0.5",
     "moment": "^2.30.1",
+    "motion": "^11.15.0",
     "next": "14.2.8",
     "react": "^18",
     "react-dom": "^18",

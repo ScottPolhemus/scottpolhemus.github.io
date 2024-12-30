@@ -1,3 +1,3 @@
-# Next WordPress Blog
+# Polhem.us Blog
 
-This is a boilerplate application for developing a static blog website using Next.js hosted on GitHub Pages using WordPress.com as a free, headless CMS.
+Personal blog site of Scott Polhemus, using Next.js and AT Protocol.

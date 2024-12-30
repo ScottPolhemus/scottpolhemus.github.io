@@ -11,23 +11,21 @@ import type {
   BrowserOAuthClient,
   OAuthSession,
 } from '@atproto/oauth-client-browser'
+import { NextUIProvider } from '@nextui-org/react'
 
 import { clientMetadata } from '@/app/oauth/client-metadata.json/route'
 import { BlogClient } from '@/services/blog'
+import AdminLoading from './Loading'
 
-export type AdminClientContextValue = {
+export type AdminContextValue = {
   oAuth?: BrowserOAuthClient
   session?: OAuthSession
   blog?: BlogClient
 }
 
-const AdminClientContext = createContext<AdminClientContextValue | null>(null)
+const AdminContext = createContext<AdminContextValue | null>(null)
 
-export default function AdminClientProvider({
-  children,
-}: {
-  children: ReactNode
-}) {
+export default function AdminProvider({ children }: { children: ReactNode }) {
   const [oAuth, setOAuth] = useState<BrowserOAuthClient>()
   const [session, setSession] = useState<OAuthSession>()
   const [blog, setBlog] = useState<BlogClient>()
@@ -53,20 +51,20 @@ export default function AdminClientProvider({
   }, [])
 
   return (
-    <AdminClientContext.Provider
+    <AdminContext.Provider
       value={{
         oAuth,
         session,
         blog,
       }}
     >
-      {!oAuth ? 'Loading...' : children}
-    </AdminClientContext.Provider>
+      <NextUIProvider>{!oAuth ? <AdminLoading /> : children}</NextUIProvider>
+    </AdminContext.Provider>
   )
 }
 
-export function useClient() {
-  const admin = useContext(AdminClientContext)
+export function useAdmin() {
+  const admin = useContext(AdminContext)
 
   if (!admin) {
     throw new Error('Missing admin context provider')

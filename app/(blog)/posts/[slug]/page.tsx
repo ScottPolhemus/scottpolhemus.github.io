@@ -1,7 +1,4 @@
-import { convert } from 'html-to-text'
-import type { WordPressPost } from '@/types'
 import PostDate from '@/components/PostDate'
-import { Agent } from '@atproto/api'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import { BlogClient } from '@/services/blog'
@@ -10,44 +7,36 @@ type PostParams = {
   slug: string
 }
 
-export async function generateMetadata({ params }: { params: PostParams }) {
-  const agent = new Agent('https://bsky.social')
+const blog = new BlogClient()
 
-  const { data } = await agent.com.atproto.repo.listRecords({
-    repo: process.env.NEXT_PUBLIC_ATPROTO_DID,
-    collection: 'us.polhem.blog.entry',
-  })
-  const post = data.records.find((record) => {
+export async function generateMetadata({ params }: { params: PostParams }) {
+  const posts = await blog.listEntries()
+  const post = posts.find((record) => {
     return record.value.slug === params.slug
   })
-  // const [post] = (await fetch(
-  //   `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?slug=${params.slug}&ts=${Date.now()}`
-  // ).then((res) => res.json())) as WordPressPost[]
 
   return {
     title: post?.value.title,
     // description: convert(post.excerpt.rendered, { wordwrap: false }),
     openGraph: {
-      // images: [
-      //   post.jetpack_featured_media_url && {
-      //     url: post.jetpack_featured_media_url,
-      //   },
-      // ].filter(Boolean),
+      images: [
+        post?.value.featuredImage &&
+          `https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${post.value.featuredImage.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`,
+      ].filter(Boolean),
     },
   }
 }
 
 export async function generateStaticParams() {
-  const blog = new BlogClient()
   const posts = await blog.listEntries()
 
   return posts.map((record) => ({ slug: record.value.slug }))
 }
 
 export default async function PostSingle({ params }: { params: PostParams }) {
-  const blog = new BlogClient()
   const post = await blog.findEntry({ slug: params.slug })
 
+  // Replace relative image paths with getBlob URLs
   const postContent = post?.value.content.replaceAll(
     /src="\.\/([^"]*)"/gm,
     (match, filename) => {
@@ -64,7 +53,7 @@ export default async function PostSingle({ params }: { params: PostParams }) {
           {post?.value.title}
         </h1>
         <p>
-          <PostDate date={post.value.createdAt} />
+          <PostDate date={post?.value.createdAt as string} />
         </p>
       </div>
       <div className="rich-text mx-auto max-w-3xl">
