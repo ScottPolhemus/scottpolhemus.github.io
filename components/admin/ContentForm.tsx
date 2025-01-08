@@ -3,9 +3,11 @@
 import { FormEventHandler, useEffect, useState } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
+import { Form, Input, Textarea, Button } from '@nextui-org/react'
 
 import { Record as ContentRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/content'
 import { useAdmin } from '@/components/admin/AdminProvider'
+import AdminLoading from './Loading'
 
 export default function AdminContentForm() {
   const { blog } = useAdmin()
@@ -13,6 +15,7 @@ export default function AdminContentForm() {
     uri: string
     value: ContentRecord
   }>()
+  const [loading, setLoading] = useState(true)
   const [rkey, setRkey] = useState('')
   const router = useRouter()
 
@@ -26,8 +29,11 @@ export default function AdminContentForm() {
       blog?.findContent({ rkey: newRkey }).then((contentRecord) => {
         if (contentRecord) {
           setRecord(contentRecord)
+          setLoading(false)
         }
       })
+    } else {
+      setLoading(false)
     }
   }, [blog])
 
@@ -37,10 +43,10 @@ export default function AdminContentForm() {
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
 
-    const data = {
-      slug: formData.get('slug') as string,
-      content: formData.get('content') as string,
-      createdAt: formData.get('createdAt') as string,
+    const data: ContentRecord = {
+      slug: formData.get('slug')?.toString() as string,
+      content: formData.get('content')?.toString() as string,
+      createdAt: formData.get('createdAt')?.toString() as string,
       images: [],
     }
 
@@ -53,50 +59,60 @@ export default function AdminContentForm() {
     router.push('/admin')
   }
 
-  if (rkey && !record) {
-    return 'Loading...'
+  if (loading) {
+    return <AdminLoading />
   }
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <label className="block">
-        <span className="block">Slug</span>
-        <input
-          className="w-full border"
-          name="slug"
-          required
-          defaultValue={record?.value.slug}
-        />
-      </label>
-      <label className="block">
-        <span className="block">Content</span>
-        <textarea
-          className="h-[500px] w-full border"
+    <Form
+      className="grid gap-4 px-6 font-sans md:grid-cols-6"
+      onSubmit={onFormSubmit}
+    >
+      <div className="col-span-4 flex flex-col gap-4">
+        <Textarea
+          label="Content"
           name="content"
           required
           defaultValue={record?.value.content}
         />
-      </label>
-      <label className="block">
-        <span>Created At</span>
-        <input
-          className="border"
+      </div>
+      <div className="col-span-2 flex flex-col gap-4">
+        <Input
+          label="Slug"
+          name="slug"
+          required
+          defaultValue={record?.value.slug}
+        />
+        <Input
+          label="Created At"
           name="createdAt"
           type="datetime-local"
+          required
           defaultValue={
             record?.value.createdAt || moment().format('YYYY-MM-DDTHH:mm')
           }
         />
-      </label>
-      <label className="block">
-        <span className="block">Content Images</span>
-        <input className="w-full border" name="images" type="file" multiple />
-      </label>
-      {!!rkey ? (
-        <button className="border">Update Content Block</button>
-      ) : (
-        <button className="border">Create Content Block</button>
-      )}
-    </form>
+        <div className="flex gap-4">
+          {!!rkey ? (
+            <Button color="primary" size="lg" className="flex-1" type="submit">
+              Update Content
+            </Button>
+          ) : (
+            <Button color="primary" size="lg" className="flex-1" type="submit">
+              Create Content
+            </Button>
+          )}
+          <Button
+            color="danger"
+            size="lg"
+            type="button"
+            disabled
+            className="flex-1"
+          >
+            Delete Content
+          </Button>
+        </div>
+      </div>
+    </Form>
   )
 }

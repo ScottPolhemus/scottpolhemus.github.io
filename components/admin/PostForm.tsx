@@ -16,7 +16,7 @@ import {
 import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
 import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 import { useAdmin } from '@/components/admin/AdminProvider'
-import { CreatePostInput, ImageInput } from '@/services/blog'
+import { PostRecordInput, ImageInput } from '@/services/blog'
 import ImageFieldGroup from './ImageFieldGroup'
 import AdminLoading from './Loading'
 
@@ -37,8 +37,6 @@ export default function AdminPostForm() {
   const [loading, setLoading] = useState(true)
   const [rkey, setRkey] = useState('')
   const router = useRouter()
-
-  console.log(images)
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -68,18 +66,18 @@ export default function AdminPostForm() {
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
 
-    const data: CreatePostInput = {
-      title: formData.get('title') as string,
-      slug: formData.get('slug') as string,
-      content: formData.get('content') as string,
-      createdAt: formData.get('createdAt') as string,
-      visibility: formData.get('visibility') as CreatePostInput['visibility'],
+    const data: PostRecordInput = {
+      title: formData.get('title')?.toString(),
+      slug: formData.get('slug')?.toString(),
+      content: formData.get('content')?.toString(),
+      createdAt: formData.get('createdAt')?.toString(),
+      visibility: formData
+        .get('visibility')
+        ?.toString() as PostRecordInput['visibility'],
       featuredImage,
       images,
-      tags: formData.getAll('tags') as string[],
+      tags: formData.getAll('tags').map((t) => t.toString()),
     }
-
-    console.log({ data })
 
     if (rkey) {
       await blog?.updatePost(rkey, data)
