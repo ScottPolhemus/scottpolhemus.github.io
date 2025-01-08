@@ -9,11 +9,13 @@ type PostParams = {
 
 const blog = new BlogClient()
 
-export async function generateMetadata({ params }: { params: PostParams }) {
-  const posts = await blog.listEntries()
-  const post = posts.find((record) => {
-    return record.value.slug === params.slug
-  })
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PostParams>
+}) {
+  const { slug } = await params
+  const post = await blog.findPost({ slug })
 
   return {
     title: post?.value.title,
@@ -28,13 +30,18 @@ export async function generateMetadata({ params }: { params: PostParams }) {
 }
 
 export async function generateStaticParams() {
-  const posts = await blog.listEntries()
+  const posts = await blog.listPosts()
 
   return posts.map((record) => ({ slug: record.value.slug }))
 }
 
-export default async function PostSingle({ params }: { params: PostParams }) {
-  const post = await blog.findEntry({ slug: params.slug })
+export default async function PostSingle({
+  params,
+}: {
+  params: Promise<PostParams>
+}) {
+  const { slug } = await params
+  const post = await blog.findPost({ slug })
 
   // Replace relative image paths with getBlob URLs
   const postContent = post?.value.content.replaceAll(

@@ -3,8 +3,11 @@
 import Image from 'next/image'
 import { Input, Button } from '@nextui-org/react'
 
+import {
+  UsPolhemBlogImage,
+  UsPolhemBlogDefs,
+} from '@/app/__generated__/lexicons'
 import { ImageInput } from '@/services/blog'
-import { UsPolhemBlogImage } from '@/app/__generated__/lexicons'
 
 export default function ImageFieldGroup({
   name,
@@ -13,18 +16,18 @@ export default function ImageFieldGroup({
   onChangeImage,
 }: {
   name: string
-  image: UsPolhemBlogImage.Main
+  image: UsPolhemBlogImage.Main | ImageInput
   onClickRemove: () => void
-  onChangeImage: (newImage: UsPolhemBlogImage.Main) => void
+  onChangeImage: (newImage: UsPolhemBlogImage.Main | ImageInput) => void
 }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
-        {image.image?.ref && (
+        {!!(image.image as UsPolhemBlogImage.Main)?.ref && (
           <Image
             width="50"
             height="100"
-            src={`https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${image.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`}
+            src={`https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${(image.image as UsPolhemBlogImage.Main).ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`}
             alt=""
           />
         )}
@@ -32,7 +35,7 @@ export default function ImageFieldGroup({
           <Image
             width="50"
             height="100"
-            src={URL.createObjectURL(image?.imageFile)}
+            src={URL.createObjectURL(image.imageFile as Blob)}
             alt=""
           />
         )}
@@ -43,14 +46,14 @@ export default function ImageFieldGroup({
       <Input
         name={`${name}[filename]`}
         label="File name"
-        value={image.filename}
+        value={image.filename as string}
         onChange={(event) => {
           event.preventDefault()
 
           onChangeImage({
             ...image,
             filename: event.target.value,
-          })
+          } as ImageInput)
         }}
       />
       <Input name={`${name}[alt]`} label="Alt text" defaultValue={image?.alt} />
@@ -67,7 +70,7 @@ export default function ImageFieldGroup({
             aspectRatio: {
               ...image.aspectRatio,
               width: parseInt(event.target.value),
-            },
+            } as UsPolhemBlogDefs.AspectRatio,
           })
         }}
       />
@@ -75,16 +78,18 @@ export default function ImageFieldGroup({
         name={`${name}[aspectRatio][height]`}
         label="Height"
         type="number"
-        defaultValue={image?.aspectRatio?.height.toString()}
+        defaultValue={(
+          image?.aspectRatio as UsPolhemBlogDefs.AspectRatio
+        )?.height?.toString()}
         onChange={(event) => {
           event.preventDefault()
 
           onChangeImage({
             ...image,
             aspectRatio: {
-              ...image.aspectRatio,
+              ...(image?.aspectRatio || {}),
               height: parseInt(event.target.value),
-            },
+            } as UsPolhemBlogDefs.AspectRatio,
           })
         }}
       />

@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Card, CardHeader, CardBody, Divider } from '@nextui-org/react'
+import { Button, Card, CardHeader, CardBody } from '@nextui-org/react'
 import Link from 'next/link'
 import { useCallback } from 'react'
 
@@ -13,23 +13,23 @@ const sectionHeadingClass = 'text-2xl font-sans font-medium'
 export default function AdminPage() {
   const { session, blog } = useAdmin()
 
-  const fetchEntries = useCallback(
+  const fetchPosts = useCallback(
     function () {
-      return blog?.listEntries(true)
+      return blog?.listPosts()
     },
     [blog]
   )
 
   const fetchContents = useCallback(
     function () {
-      return blog?.listContents(true)
+      return blog?.listContents()
     },
     [blog]
   )
 
   const fetchTags = useCallback(
     function () {
-      return blog?.listTags(true)
+      return blog?.listTags()
     },
     [blog]
   )
@@ -42,16 +42,16 @@ export default function AdminPage() {
     <div className="m-8 grid gap-4 font-sans sm:grid-cols-2 lg:grid-cols-3">
       <Card>
         <CardHeader className="flex justify-between pb-0">
-          <h2 className={sectionHeadingClass}>Entries</h2>
-          <Button as={Link} href="/admin/entry" color="primary">
-            New Entry
+          <h2 className={sectionHeadingClass}>Posts</h2>
+          <Button as={Link} href="/admin/post" color="primary">
+            New Post
           </Button>
         </CardHeader>
         <CardBody>
           <AdminResourceList
-            fetchRecords={fetchEntries}
+            fetchRecords={fetchPosts}
             resourceLabel="Post"
-            resourceSlug="entry"
+            resourceSlug="post"
           />
         </CardBody>
       </Card>

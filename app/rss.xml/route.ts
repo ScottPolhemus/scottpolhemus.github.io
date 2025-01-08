@@ -4,7 +4,7 @@ import moment from 'moment'
 
 export async function GET() {
   const blog = new BlogClient()
-  const posts = await blog.listEntries()
+  const posts = await blog.listPosts()
 
   const feed = new Feed({
     title: 'Polhem.us',

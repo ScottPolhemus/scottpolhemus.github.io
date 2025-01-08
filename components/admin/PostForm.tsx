@@ -13,18 +13,18 @@ import {
   Button,
 } from '@nextui-org/react'
 
-import { Record as EntryRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/entry'
+import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
 import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 import { useAdmin } from '@/components/admin/AdminProvider'
-import { CreateEntryInput } from '@/services/blog'
+import { CreatePostInput, ImageInput } from '@/services/blog'
 import ImageFieldGroup from './ImageFieldGroup'
 import AdminLoading from './Loading'
 
-export default function AdminEntryForm() {
+export default function AdminPostForm() {
   const { blog } = useAdmin()
   const [record, setRecord] = useState<{
     uri: string
-    value: EntryRecord
+    value: PostRecord
   }>()
   const [tagRecords, setTagRecords] = useState<
     {
@@ -32,12 +32,13 @@ export default function AdminEntryForm() {
       value: TagRecord
     }[]
   >()
-  const [featuredImage, setFeaturedImage] =
-    useState<CreateEntryInput['featuredImage']>()
-  const [images, setImages] = useState<CreateEntryInput['images']>()
+  const [featuredImage, setFeaturedImage] = useState<ImageInput>()
+  const [images, setImages] = useState<ImageInput[]>()
   const [loading, setLoading] = useState(true)
   const [rkey, setRkey] = useState('')
   const router = useRouter()
+
+  console.log(images)
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -46,11 +47,11 @@ export default function AdminEntryForm() {
     if (newRkey) {
       setRkey(newRkey)
 
-      blog?.findEntry({ rkey: newRkey }).then((entryRecord) => {
-        if (entryRecord) {
-          setRecord(entryRecord)
-          setFeaturedImage(entryRecord.value.featuredImage)
-          setImages(entryRecord.value.images)
+      blog?.findPost({ rkey: newRkey }).then((postRecord) => {
+        if (postRecord) {
+          setRecord(postRecord)
+          setFeaturedImage(postRecord.value.featuredImage)
+          setImages(postRecord.value.images)
           setLoading(false)
         }
       })
@@ -67,12 +68,12 @@ export default function AdminEntryForm() {
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
 
-    const data: CreateEntryInput = {
+    const data: CreatePostInput = {
       title: formData.get('title') as string,
       slug: formData.get('slug') as string,
       content: formData.get('content') as string,
       createdAt: formData.get('createdAt') as string,
-      visibility: formData.get('visibility') as CreateEntryInput['visibility'],
+      visibility: formData.get('visibility') as CreatePostInput['visibility'],
       featuredImage,
       images,
       tags: formData.getAll('tags') as string[],
@@ -81,9 +82,9 @@ export default function AdminEntryForm() {
     console.log({ data })
 
     if (rkey) {
-      await blog?.updateEntry(rkey, data)
+      await blog?.updatePost(rkey, data)
     } else {
-      await blog?.createEntry(data)
+      await blog?.createPost(data)
     }
 
     router.push('/admin')
@@ -117,7 +118,7 @@ export default function AdminEntryForm() {
             required
             defaultValue={record?.value.content}
           />
-          {!!record?.value.images?.length && (
+          {!!images?.length && (
             <>
               {images?.map((image, index) => (
                 <ImageFieldGroup
@@ -125,81 +126,19 @@ export default function AdminEntryForm() {
                   image={image}
                   key={index}
                   onChangeImage={(newImage) => {
-                    setImages(
-                      [
-                        ...images,
-                        {
-                          filename: newImage.name,
-                        },
-                      ]
-                      // images.map((img, imgIndex) => {
-                      //   if (imgIndex === index) {
-                      //     return newImage
-                      //   }
-                      //   return img
-                      // })
-                    )
+                    const newImages = [...images]
+                    newImages[index] = newImage
+                    setImages(newImages)
                   }}
                   onClickRemove={() => {
-                    const { images, ...value } = record.value
-                    setRecord({
-                      ...record,
-                      value: {
-                        ...value,
-                        images: images?.filter(
-                          (i) => i.filename !== image.filename
-                        ),
-                      },
-                    })
+                    setImages(
+                      (images || []).filter((i) => {
+                        i.filename !== image.filename
+                      })
+                    )
                   }}
-                  // name={`images[${image.filename}]`}
-                  // image={image}
-                  // key={image.filename}
-                  // onClickRemove={() => {
-                  //   const { images, ...value } = record.value
-                  //   setRecord({
-                  //     ...record,
-                  //     value: {
-                  //       ...value,
-                  //       images: images?.filter(
-                  //         (i) => i.filename !== image.filename
-                  //       ),
-                  //     },
-                  //   })
-                  // }}
                 />
               ))}
-              {/* {record?.value.images.map((image) => (
-                <ImageFieldGroup
-                  name={`images[${image.filename}]`}
-                  image={image}
-                  key={image.filename}
-                  onClickRemove={() => {
-                    const { images, ...value } = record.value
-                    setRecord({
-                      ...record,
-                      value: {
-                        ...value,
-                        images: images?.filter(
-                          (i) => i.filename !== image.filename
-                        ),
-                      },
-                    })
-                  }}
-                />
-              ))} */}
-              {/* {imagesFiles.map((imageFile, index) => (
-                <ImageFieldGroup
-                  name={`images[${index}]`}
-                  imageFile={imageFile}
-                  key={imageFile.name}
-                  onClickRemove={() => {
-                    setImagesFiles(
-                      imagesFiles.filter((file) => file.name !== imageFile.name)
-                    )
-                  }}
-                />
-              ))} */}
             </>
           )}
           <Input
@@ -208,7 +147,36 @@ export default function AdminEntryForm() {
             type="file"
             multiple
             onChange={(event) => {
-              // setImagesFiles([...imagesFiles, ...(event.target.files || [])])
+              if (event.target.files) {
+                const newImages = [...(images || [])]
+                const files = [...event.target.files]
+
+                Promise.all(
+                  files.map((file) => {
+                    return createImageBitmap(file).then((bitmap) => {
+                      const { width, height } = bitmap
+                      bitmap.close()
+
+                      return {
+                        imageFile: file,
+                        filename: file.name,
+                        alt: '',
+                        aspectRatio: {
+                          width,
+                          height,
+                        },
+                      }
+                    })
+                  })
+                ).then((imageInputs) => {
+                  for (const input of imageInputs) {
+                    newImages.push(input)
+                  }
+
+                  setImages(newImages)
+                })
+              }
+
               event.target.value = ''
             }}
           />

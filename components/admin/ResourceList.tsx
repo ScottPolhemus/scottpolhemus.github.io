@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Link as UILink } from '@nextui-org/react'
 import { PressEvent } from '@react-types/shared'
 
-import { Record as EntryRecord } from '@lexicons/entry'
+import { Record as PostRecord } from '@lexicons/post'
 import { Record as ContentRecord } from '@lexicons/content'
 import { Record as TagRecord } from '@lexicons/tag'
 
@@ -12,13 +12,13 @@ import PostDate from '../PostDate'
 import { useAdmin } from './AdminProvider'
 
 export default function AdminResourceList<
-  EntryType = EntryRecord | ContentRecord | TagRecord,
+  RecordType = PostRecord | ContentRecord | TagRecord,
 >({
   fetchRecords,
   resourceLabel,
   resourceSlug,
 }: {
-  fetchRecords: () => Promise<{ uri: string; value: EntryType }[]> | undefined
+  fetchRecords: () => Promise<{ uri: string; value: RecordType }[]> | undefined
   resourceLabel: string
   resourceSlug: string
 }) {
@@ -26,7 +26,7 @@ export default function AdminResourceList<
   const [records, setRecords] = useState<
     {
       uri: string
-      value: EntryType
+      value: RecordType
     }[]
   >([])
 
@@ -47,7 +47,7 @@ export default function AdminResourceList<
         ?.getAttribute('data-rkey')
 
       if (rkey && confirm('Are you sure?')) {
-        blog?.deleteEntry(rkey).then(() => {
+        blog?.deletePost(rkey).then(() => {
           refreshRecords()
         })
       }
@@ -63,11 +63,11 @@ export default function AdminResourceList<
     let createdAt = ''
 
     switch (collection) {
-      case 'us.polhem.blog.entry': {
-        const entry = p.value as EntryRecord
-        url = `/posts/${entry.slug}`
-        title = entry.title
-        createdAt = entry.createdAt
+      case 'us.polhem.blog.post': {
+        const post = p.value as PostRecord
+        url = `/posts/${post.slug}`
+        title = post.title
+        createdAt = post.createdAt
         break
       }
       case 'us.polhem.blog.content': {
@@ -104,7 +104,7 @@ export default function AdminResourceList<
             as="button"
             onPress={onClickDelete}
             color="foreground"
-            className="hover:text-danger focus:text-danger active:text-danger underline"
+            className="underline hover:text-danger focus:text-danger active:text-danger"
           >
             Delete {resourceLabel}
           </UILink>

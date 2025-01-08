@@ -10,10 +10,10 @@ import { getBlogPostExcerpt } from '@/utils/blog'
 export default async function PostsList({
   tag,
 }: {
-  tag: { uri: string; value: TagRecord }
+  tag?: { uri: string; value: TagRecord }
 }) {
   const client = new BlogClient()
-  let results = await client.listEntries()
+  let results = await client.listPosts({ visibility: 'public' })
 
   if (tag) {
     results = results.filter(({ value }) => value.tags?.includes(tag.uri))

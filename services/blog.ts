@@ -1,22 +1,25 @@
 import { Agent, BlobRef } from '@atproto/api'
 import { OAuthSession } from '@atproto/oauth-client-browser'
 
-import { UsPolhemBlogImage, UsPolhemBlogNS } from '@/app/__generated__/lexicons'
-import { Record as EntryRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/entry'
+import { UsPolhemBlogDefs, UsPolhemBlogNS } from '@/app/__generated__/lexicons'
+import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
 import { Record as ContentRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/content'
 import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 
-export type ImageInput = Omit<UsPolhemBlogImage.Main, 'image'> &
-  (
-    | {
-        image: UsPolhemBlogImage.Main['image']
-      }
-    | {
-        imageFile: File
-      }
-  )
+export type ImageInput = {
+  filename: string
+  alt: string
+  aspectRatio?: UsPolhemBlogDefs.AspectRatio
+} & (
+  | {
+      image: BlobRef
+    }
+  | {
+      imageFile: File
+    }
+)
 
-export type CreateEntryInput = EntryRecord & {
+export type PostRecordInput = Omit<PostRecord, 'images' | 'featuredImage'> & {
   featuredImage?: ImageInput
   images?: ImageInput[]
 }
@@ -25,9 +28,9 @@ export class BlogClient {
   _did: string
   _agent: Agent
   _blog: UsPolhemBlogNS
-  _entryRecords?: {
+  _postRecords?: {
     uri: string
-    value: EntryRecord
+    value: PostRecord
   }[]
   _tagRecords?: {
     uri: string
@@ -54,18 +57,24 @@ export class BlogClient {
     this._blog = new UsPolhemBlogNS(this._agent)
   }
 
-  async listEntries(refresh = false) {
-    if (!this._entryRecords || refresh) {
-      const response = await this._blog.entry.list({ repo: this._did })
+  async listPosts({ visibility }: { visibility?: string } = {}) {
+    if (!this._postRecords) {
+      const response = await this._blog.post.list({ repo: this._did })
 
-      this._entryRecords = response.records
+      this._postRecords = response.records
     }
 
-    return this._entryRecords
+    if (visibility) {
+      return this._postRecords.filter(
+        ({ value }) => value.visibility === visibility
+      )
+    }
+
+    return this._postRecords
   }
 
-  async listContents(refresh = false) {
-    if (!this._contentRecords || refresh) {
+  async listContents() {
+    if (!this._contentRecords) {
       const response = await this._blog.content.list({ repo: this._did })
 
       this._contentRecords = response.records
@@ -74,8 +83,8 @@ export class BlogClient {
     return this._contentRecords
   }
 
-  async listTags(refresh = false) {
-    if (!this._tagRecords || refresh) {
+  async listTags() {
+    if (!this._tagRecords) {
       const response = await this._blog.tag.list({ repo: this._did })
 
       this._tagRecords = response.records
@@ -84,12 +93,12 @@ export class BlogClient {
     return this._tagRecords
   }
 
-  async findEntry({ slug, rkey }: { slug?: string; rkey?: string }) {
+  async findPost({ slug, rkey }: { slug?: string; rkey?: string }) {
     if (!slug && !rkey) {
       throw new Error('At least 1 query param is required.')
     }
 
-    return (await this.listEntries()).find((record) => {
+    return (await this.listPosts()).find((record) => {
       if (rkey) {
         return record.uri.endsWith(`/${rkey}`)
       }
@@ -132,15 +141,27 @@ export class BlogClient {
     })
   }
 
-  async _prepareEntryRecord({
+  async _preparePostRecord({
     featuredImage,
     images,
-    ...record
-  }: CreateEntryInput): Promise<EntryRecord> {
-    const allImageFiles = [
-      featuredImage?.imageFile as File,
-      ...(images?.map(({ imageFile }) => imageFile as File) || []),
-    ].filter((f) => !!f)
+    ...data
+  }: PostRecordInput): Promise<PostRecord> {
+    // Prepare array of image files not yet uploaded
+    const allImageFiles = []
+
+    if (featuredImage) {
+      if ('imageFile' in featuredImage) {
+        allImageFiles.push(featuredImage.imageFile)
+      }
+    }
+
+    if (images && images.length) {
+      for (const image of images) {
+        if ('imageFile' in image) {
+          allImageFiles.push(image.imageFile)
+        }
+      }
+    }
 
     const imageFileBlobs: Record<
       string,
@@ -149,7 +170,7 @@ export class BlogClient {
       >['data']
     > = {}
 
-    // Upload image file blobs and store references
+    // Upload image files and store references to blob record
     await Promise.all(
       allImageFiles.map(async (imageFile) => {
         const response =
@@ -158,30 +179,41 @@ export class BlogClient {
       })
     )
 
-    const data = record as EntryRecord
+    const record = { ...data } as PostRecord
 
     if (featuredImage) {
-      data.featuredImage = {
-        ...featuredImage,
-        image: featuredImage.image || imageFileBlobs[featuredImage.filename],
+      if ('imageFile' in featuredImage) {
+        const { imageFile, ...featImg } = featuredImage
+        record.featuredImage = {
+          ...featImg,
+          image: imageFileBlobs[imageFile.name].blob,
+        }
       }
     }
 
-    if (images?.length) {
-      data.images = images.map((image) => ({
-        ...image,
-        image: image.image || imageFileBlobs[image.filename],
-      }))
+    if (images && images.length) {
+      record.images = images.map((image) => {
+        if ('imageFile' in image) {
+          const { imageFile, ...img } = image
+
+          return {
+            ...img,
+            image: imageFileBlobs[imageFile.name].blob,
+          }
+        }
+
+        return image
+      })
     }
 
-    return data
+    return record
   }
 
-  async createEntry(data: CreateEntryInput) {
-    const record = await this._prepareEntryRecord(data)
+  async createPost(data: PostRecordInput) {
+    const record = await this._preparePostRecord(data)
 
-    // Create blog entry
-    return this._blog.entry.create(
+    // Create blog post
+    return this._blog.post.create(
       {
         repo: this._did,
       },
@@ -197,12 +229,12 @@ export class BlogClient {
     return this._blog.tag.create({ repo: this._did }, data)
   }
 
-  async updateEntry(rkey: string, data: CreateEntryInput) {
-    const record = await this._prepareEntryRecord(data)
+  async updatePost(rkey: string, data: PostRecordInput) {
+    const record = await this._preparePostRecord(data)
 
     return this._agent.com.atproto.repo.putRecord({
       repo: this._did,
-      collection: 'us.polhem.blog.entry',
+      collection: 'us.polhem.blog.post',
       rkey,
       record,
     })
@@ -226,8 +258,8 @@ export class BlogClient {
     })
   }
 
-  deleteEntry(rkey: string) {
-    return this._blog.entry.delete({
+  deletePost(rkey: string) {
+    return this._blog.post.delete({
       repo: this._did,
       rkey,
     })

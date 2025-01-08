@@ -1,5 +1,5 @@
-import { Record as EntryRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/entry'
+import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
 
-export function getBlogPostExcerpt(entry: EntryRecord) {
-  return entry.content.replaceAll('\n', ' ')
+export function getBlogPostExcerpt(post: PostRecord) {
+  return post.content.replaceAll('\n', ' ')
 }
