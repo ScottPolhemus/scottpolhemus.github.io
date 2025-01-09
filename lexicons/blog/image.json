@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "us.polhem.blog.image",
+  "description": "An image uploaded to the blog.",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "filename",
+        "image",
+        "alt"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "image": {
+          "type": "blob",
+          "accept": [
+            "image/*"
+          ],
+          "maxSize": 1000000
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text description of the image, for accessibility."
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "us.polhem.blog.defs#aspectRatio"
+        }
+      }
+    }
+  }
+}

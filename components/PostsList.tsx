@@ -1,43 +1,47 @@
 import Link from 'next/link'
-import { WordPressPost, WordPressTag } from '@/types'
 import PostDate from '@/components/PostDate'
+import Markdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
+import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
 
-export default async function PostsList({ tags }: { tags?: WordPressTag[] }) {
-  const params = {} as Record<string, string>
+import { BlogClient } from '@/services/blog'
+import { getBlogPostExcerpt } from '@/utils/blog'
 
-  if (typeof tags !== 'undefined') {
-    tags.forEach((tag, index) => {
-      params[`tags[${index}]`] = tag.id
-    })
+export default async function PostsList({
+  tag,
+}: {
+  tag?: { uri: string; value: TagRecord }
+}) {
+  const client = new BlogClient()
+  let results = await client.listPosts({ visibility: 'public' })
+
+  if (tag) {
+    results = results.filter(({ value }) => value.tags?.includes(tag.uri))
   }
 
-  const posts = (await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/${process.env.WORDPRESS_COM_DOMAIN}/posts?${new URLSearchParams(params)}`
-  ).then((res) => res.json())) as WordPressPost[]
-
   return (
-    <ul>
-      {posts.map((post, index) => (
+    <ul className="mx-auto max-w-7xl">
+      {results.map((record) => (
         <li
-          key={`post-${index}`}
+          key={record.uri}
           className="mb-4 border-b border-black pb-4 last:mb-0 last:border-b-0"
         >
-          <Link className="group" href={`/posts/${post.slug}`}>
+          <Link className="group" href={`/posts/${record.value.slug}`}>
             <h3 className="font-serif text-xl font-light group-hover:underline">
-              <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+              {record.value.title}
             </h3>
             <p>
-              <PostDate date={post.date} />
+              <PostDate date={record.value.createdAt} />
             </p>
-            <div
-              className="rich-text text-sm"
-              dangerouslySetInnerHTML={{
-                __html: post.excerpt.rendered.replace(
-                  ' [&hellip;]',
-                  '&hellip;'
-                ),
-              }}
-            ></div>
+            <div className="rich-text text-sm [&_strong]:font-normal">
+              <Markdown
+                rehypePlugins={[rehypeRaw]}
+                allowedElements={['p', 'strong']}
+                className="line-clamp-2"
+              >
+                {getBlogPostExcerpt(record.value)}
+              </Markdown>
+            </div>
           </Link>
         </li>
       ))}
