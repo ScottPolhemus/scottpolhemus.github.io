@@ -7,10 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import type {
-  BrowserOAuthClient,
-  OAuthSession,
-} from '@atproto/oauth-client-browser'
+import { OAuthSession, BrowserOAuthClient } from '@atproto/oauth-client-browser'
 import { NextUIProvider } from '@nextui-org/react'
 
 import { clientMetadata } from '@/services/oauth'
@@ -31,23 +28,19 @@ export default function AdminProvider({ children }: { children: ReactNode }) {
   const [blog, setBlog] = useState<BlogClient>()
 
   useEffect(() => {
-    import('@atproto/oauth-client-browser').then(
-      ({ BrowserOAuthClient: OAuthClient }) => {
-        const oAuthClient = new OAuthClient({
-          clientMetadata,
-          handleResolver: 'https://bsky.social',
-        })
+    const oAuthClient = new BrowserOAuthClient({
+      clientMetadata,
+      handleResolver: 'https://bsky.social',
+    })
 
-        oAuthClient.init().then((result) => {
-          setOAuth(oAuthClient)
+    oAuthClient.init().then((result) => {
+      setOAuth(oAuthClient)
 
-          if (!!result && 'session' in result) {
-            setSession(result.session)
-            setBlog(new BlogClient(result.session))
-          }
-        })
+      if (!!result && 'session' in result) {
+        setSession(result.session)
+        setBlog(new BlogClient(result.session))
       }
-    )
+    })
   }, [])
 
   return (

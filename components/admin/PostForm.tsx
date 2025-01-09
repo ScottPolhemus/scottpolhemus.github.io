@@ -208,35 +208,6 @@ export default function AdminPostForm() {
             <SelectItem key="url">URL</SelectItem>
             <SelectItem key="public">Public</SelectItem>
           </Select>
-          {/* <label className="block"> */}
-          {/* <span className="block">Featured Image</span> */}
-          {/* {record?.value.featuredImage || featuredImageFile ? (
-              <ImageFieldGroup
-                name="featuredImage"
-                image={record?.value.featuredImage}
-                imageFile={featuredImageFile}
-                onClickRemove={() => {
-                  const { featuredImage, ...value } = record?.value
-
-                  setRecord({
-                    ...record,
-                    value,
-                  })
-                }}
-              />
-            ) : (
-              <input
-                className="w-full border"
-                name="featuredImage[file]"
-                type="file"
-                onChange={(event) => {
-                  if (event.target.files?.length) {
-                    // setFeaturedImageFile(event.target.files[0])
-                  }
-                }}
-              />
-            )}
-          </label> */}
           {!!tagRecords && (
             <Select
               label="Tags"
@@ -251,6 +222,45 @@ export default function AdminPostForm() {
               ))}
             </Select>
           )}
+          {!!featuredImage && (
+            <ImageFieldGroup
+              name={`featuredImage`}
+              image={featuredImage}
+              onChangeImage={(newImage) => {
+                setFeaturedImage(newImage)
+              }}
+              onClickRemove={() => {
+                setFeaturedImage(undefined)
+              }}
+            />
+          )}
+          <Input
+            label="Featured Image"
+            name="featuredImage"
+            type="file"
+            onChange={(event) => {
+              if (event.target.files) {
+                const newFeatImg = event.target.files[0]
+
+                createImageBitmap(newFeatImg).then((bitmap) => {
+                  const { width, height } = bitmap
+                  bitmap.close()
+
+                  setFeaturedImage({
+                    imageFile: newFeatImg,
+                    filename: newFeatImg.name,
+                    alt: '',
+                    aspectRatio: {
+                      width,
+                      height,
+                    },
+                  })
+                })
+              }
+
+              event.target.value = ''
+            }}
+          />
           <div className="flex gap-4">
             {!!rkey ? (
               <Button

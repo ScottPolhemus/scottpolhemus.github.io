@@ -1,5 +1,5 @@
 import { Agent, BlobRef } from '@atproto/api'
-import { OAuthSession } from '@atproto/oauth-client-browser'
+import type { OAuthSession } from '@atproto/oauth-client-browser'
 
 import { UsPolhemBlogDefs, UsPolhemBlogNS } from '@/app/__generated__/lexicons'
 import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
