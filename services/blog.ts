@@ -42,16 +42,21 @@ export class BlogClient {
   }[]
 
   constructor(sessionOrDid?: OAuthSession | string) {
-    if (
-      typeof sessionOrDid === 'string' ||
-      typeof sessionOrDid === 'undefined'
-    ) {
-      this._did =
-        sessionOrDid || (process.env.NEXT_PUBLIC_ATPROTO_DID as string)
+    if (typeof sessionOrDid === 'string') {
+      this._did = sessionOrDid
       this._agent = new Agent('https://bsky.social')
-    } else {
+    } else if (typeof sessionOrDid === 'undefined') {
+      if (!process.env.NEXT_PUBLIC_ATPROTO_DID) {
+        throw new Error('Missing NEXT_PUBLIC_ATPROTO_DID env variable')
+      }
+
+      this._did = process.env.NEXT_PUBLIC_ATPROTO_DID
+      this._agent = new Agent('https://bsky.social')
+    } else if ('sub' in sessionOrDid) {
       this._did = sessionOrDid.sub
       this._agent = new Agent(sessionOrDid)
+    } else {
+      throw new Error('Invalid argument for BlogClient constructor')
     }
 
     this._blog = new UsPolhemBlogNS(this._agent)

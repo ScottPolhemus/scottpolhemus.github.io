@@ -7,9 +7,14 @@ type TagParams = {
 
 const blog = new BlogClient()
 
-export async function generateMetadata({ params }: { params: TagParams }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<TagParams>
+}) {
+  const { slug } = await params
   const tags = await blog.listTags()
-  const tag = tags.find(({ value }) => value.slug === params.slug)
+  const tag = tags.find(({ value }) => value.slug === slug)
 
   return {
     title: tag?.value.name,
@@ -24,10 +29,14 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function TagSingle({ params }: { params: TagParams }) {
+export default async function TagSingle({
+  params,
+}: {
+  params: Promise<TagParams>
+}) {
+  const { slug } = await params
   const tags = await blog.listTags()
-  const tag = tags.find(({ value }) => value.slug === params.slug)
-  console.log({ tag })
+  const tag = tags.find(({ value }) => value.slug === slug)
 
   return (
     <div className="p-4">

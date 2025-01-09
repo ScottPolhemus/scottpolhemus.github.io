@@ -13,7 +13,7 @@ import type {
 } from '@atproto/oauth-client-browser'
 import { NextUIProvider } from '@nextui-org/react'
 
-import { clientMetadata } from '@/app/oauth/client-metadata.json/route'
+import { clientMetadata } from '@/services/oauth'
 import { BlogClient } from '@/services/blog'
 import AdminLoading from './Loading'
 

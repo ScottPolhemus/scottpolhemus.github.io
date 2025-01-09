@@ -8,6 +8,7 @@ import {
   UsPolhemBlogDefs,
 } from '@/app/__generated__/lexicons'
 import { ImageInput } from '@/services/blog'
+import { BlobRef } from '@atproto/api'
 
 export default function ImageFieldGroup({
   name,
@@ -20,22 +21,30 @@ export default function ImageFieldGroup({
   onClickRemove: () => void
   onChangeImage: (newImage: UsPolhemBlogImage.Main | ImageInput) => void
 }) {
+  let imageBlobRef: BlobRef | undefined
+  let imageFile: File | undefined
+
+  if ('image' in image) {
+    imageBlobRef = image.image
+  } else if ('imageFile' in image) {
+    imageFile = image.imageFile
+  }
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
-        {!!(image.image as UsPolhemBlogImage.Main)?.ref && (
+        {typeof imageBlobRef !== 'undefined' && (
           <Image
             width="50"
             height="100"
-            src={`https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${(image.image as UsPolhemBlogImage.Main).ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`}
+            src={`https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${imageBlobRef.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`}
             alt=""
           />
         )}
-        {!!image.imageFile && (
+        {typeof imageFile !== 'undefined' && (
           <Image
             width="50"
             height="100"
-            src={URL.createObjectURL(image.imageFile as Blob)}
+            src={URL.createObjectURL(imageFile)}
             alt=""
           />
         )}
@@ -46,7 +55,7 @@ export default function ImageFieldGroup({
       <Input
         name={`${name}[filename]`}
         label="File name"
-        value={image.filename as string}
+        value={image.filename}
         onChange={(event) => {
           event.preventDefault()
 

@@ -2,6 +2,8 @@ import { BlogClient } from '@/services/blog'
 import { Feed } from 'feed'
 import moment from 'moment'
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   const blog = new BlogClient()
   const posts = await blog.listPosts()
