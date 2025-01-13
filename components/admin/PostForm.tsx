@@ -130,9 +130,9 @@ export default function AdminPostForm() {
                   }}
                   onClickRemove={() => {
                     setImages(
-                      (images || []).filter((i) => {
-                        i.filename !== image.filename
-                      })
+                      (images || []).filter(
+                        ({ filename }) => filename !== image.filename
+                      )
                     )
                   }}
                 />
@@ -226,9 +226,7 @@ export default function AdminPostForm() {
             <ImageFieldGroup
               name={`featuredImage`}
               image={featuredImage}
-              onChangeImage={(newImage) => {
-                setFeaturedImage(newImage)
-              }}
+              onChangeImage={setFeaturedImage}
               onClickRemove={() => {
                 setFeaturedImage(undefined)
               }}
