@@ -193,6 +193,8 @@ export class BlogClient {
           ...featImg,
           image: imageFileBlobs[imageFile.name].blob,
         }
+      } else {
+        record.featuredImage = featuredImage
       }
     }
 

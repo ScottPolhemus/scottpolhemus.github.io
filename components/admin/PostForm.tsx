@@ -70,6 +70,7 @@ export default function AdminPostForm() {
       title: formData.get('title')?.toString(),
       slug: formData.get('slug')?.toString(),
       content: formData.get('content')?.toString(),
+      excerpt: formData.get('excerpt')?.toString(),
       createdAt: formData.get('createdAt')?.toString(),
       visibility: formData
         .get('visibility')
@@ -194,6 +195,12 @@ export default function AdminPostForm() {
             defaultValue={
               record?.value.createdAt || moment().format('YYYY-MM-DDTHH:mm')
             }
+          />
+          <Textarea
+            label="Excerpt"
+            name="excerpt"
+            required
+            defaultValue={record?.value.excerpt}
           />
           <Select
             label="Visibility"
