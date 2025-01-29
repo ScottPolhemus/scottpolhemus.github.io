@@ -23,6 +23,10 @@
             "type": "string",
             "maxLength": 100000
           },
+          "excerpt": {
+            "type": "string",
+            "maxLength": 1000
+          },
           "slug": {
             "type": "string",
             "maxLength": 100
