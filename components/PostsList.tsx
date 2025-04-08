@@ -36,7 +36,7 @@ export default async function PostsList({
             <div className="rich-text text-sm [&_strong]:font-normal">
               <Markdown
                 rehypePlugins={[rehypeRaw]}
-                allowedElements={['p', 'strong']}
+                allowedElements={['p', 'em', 'strong']}
                 className="line-clamp-2"
               >
                 {getBlogPostExcerpt(record.value)}
