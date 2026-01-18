@@ -55,6 +55,10 @@
     @apply list-inside list-decimal;
   }
 
+  hr {
+    @apply border-black mt-6 mb-6;
+  }
+
   a {
     @apply text-blue-700 underline hover:text-blue-500;
   }
@@ -87,5 +91,21 @@
 
   .figure-right {
     @apply float-right mb-0 ml-2 max-w-[40%] md:max-w-full;
+  }
+
+  .footnotes {
+    @apply text-sm;
+
+    ol li {
+      @apply list-decimal list-inside mb-4;
+
+      a {
+        @apply no-underline;
+      }
+
+      p {
+        @apply inline;
+      }
+    }
   }
 }

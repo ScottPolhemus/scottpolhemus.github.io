@@ -1,6 +1,7 @@
 import PostDate from '@/components/PostDate'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import remarkGfm from 'remark-gfm';
 import { BlogClient } from '@/services/blog'
 
 type PostParams = {
@@ -64,7 +65,7 @@ export default async function PostSingle({
         </p>
       </div>
       <div className="rich-text mx-auto max-w-3xl">
-        <Markdown rehypePlugins={[rehypeRaw]}>{postContent}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>{postContent}</Markdown>
       </div>
     </div>
   )

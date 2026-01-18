@@ -21,7 +21,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^9.0.3",
-    "rehype-raw": "^7.0.0"
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@atproto/lex-cli": "^0.5.5",
