@@ -1,10 +1,15 @@
 import { Agent, BlobRef } from '@atproto/api'
 import type { OAuthSession } from '@atproto/oauth-client-browser'
 
-import { UsPolhemBlogDefs, UsPolhemBlogNS } from '@/app/__generated__/lexicons'
+import {
+  UsPolhemBlogDefs,
+  UsPolhemBlogNS,
+  SiteStandardNS,
+} from '@/app/__generated__/lexicons'
 import { Record as PostRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/post'
 import { Record as ContentRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/content'
 import { Record as TagRecord } from '@/app/__generated__/lexicons/types/us/polhem/blog/tag'
+import { Record as SiteStandardDocumentRecord } from '@/app/__generated__/lexicons/types/site/standard/document'
 
 export type ImageInput = {
   filename: string
@@ -28,6 +33,7 @@ export class BlogClient {
   _did: string
   _agent: Agent
   _blog: UsPolhemBlogNS
+  _standardSite: SiteStandardNS
   _postRecords?: {
     uri: string
     value: PostRecord
@@ -39,6 +45,10 @@ export class BlogClient {
   _contentRecords?: {
     uri: string
     value: ContentRecord
+  }[]
+  _documentRecords?: {
+    uri: string
+    value: SiteStandardDocumentRecord
   }[]
 
   constructor(sessionOrDid?: OAuthSession | string) {
@@ -60,6 +70,7 @@ export class BlogClient {
     }
 
     this._blog = new UsPolhemBlogNS(this._agent)
+    this._standardSite = new SiteStandardNS(this._agent)
   }
 
   async listPosts({ visibility }: { visibility?: string } = {}) {
@@ -76,6 +87,18 @@ export class BlogClient {
     }
 
     return this._postRecords
+  }
+
+  async listDocuments() {
+    if (!this._documentRecords) {
+      const response = await this._standardSite.document.list({
+        repo: this._did,
+      })
+
+      this._documentRecords = response.records
+    }
+
+    return this._documentRecords
   }
 
   async listContents() {
@@ -110,6 +133,22 @@ export class BlogClient {
 
       if (slug) {
         return record.value.slug === slug
+      }
+    })
+  }
+
+  async findDocument({ path, rkey }: { path?: string; rkey?: string }) {
+    if (!path && !rkey) {
+      throw new Error('At least 1 query param is required.')
+    }
+
+    return (await this.listDocuments()).find((record) => {
+      if (rkey) {
+        return record.uri.endsWith(`/${rkey}`)
+      }
+
+      if (path) {
+        return record.value.path === path
       }
     })
   }

@@ -7,7 +7,7 @@
     "build": "npm run lexicons -- --yes && next build",
     "start": "serve ./out",
     "lint": "next lint",
-    "lexicons": "lex gen-api ./app/__generated__/lexicons ./lexicons/us/polhem/blog/* ./lexicons/com/atproto/repo/*"
+    "lexicons": "lex gen-api ./app/__generated__/lexicons ./lexicons/us/polhem/blog/* ./lexicons/com/atproto/**/* ./lexicons/site/standard/*"
   },
   "dependencies": {
     "@atproto/api": "^0.13.26",

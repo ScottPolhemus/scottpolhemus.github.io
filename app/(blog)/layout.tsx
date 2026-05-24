@@ -44,9 +44,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${crimsonPro.variable} ${rubik.variable}`}>
-      <body className="flex min-h-[100vh] flex-col bg-chardonnay-200">
+      <body className="bg-chardonnay-200 flex min-h-screen flex-col">
         <header className="px-4 pt-2">
-          <h1 className="mx-auto max-w-7xl text-2xl font-semibold text-golden-bell-900 hover:underline">
+          <h1 className="text-golden-bell-900 mx-auto max-w-7xl text-2xl font-semibold hover:underline">
             <Link href="/">The personal blog of Scott Polhemus</Link>
           </h1>
         </header>
@@ -55,10 +55,10 @@ export default async function RootLayout({
           <div className="mx-auto max-w-7xl">
             <Image
               alt="Scott Polhemus"
-              className="float-right ml-2 h-[100px] w-[100px] rounded-full"
+              className="float-right ml-2 h-25 w-25 rounded-full"
               width="200"
               height="200"
-              src="/profile.png"
+              src="/assets/profile.png"
             />
             {!!aboutContent && (
               <div className="rich-text">

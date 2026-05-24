@@ -1,7 +1,7 @@
 import PostDate from '@/components/PostDate'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import remarkGfm from 'remark-gfm';
+import remarkGfm from 'remark-gfm'
 import { BlogClient } from '@/services/blog'
 
 type PostParams = {
@@ -16,24 +16,28 @@ export async function generateMetadata({
   params: Promise<PostParams>
 }) {
   const { slug } = await params
-  const post = await blog.findPost({ slug })
+  const post = await blog.findDocument({ path: `/posts/${slug}` })
 
   return {
     title: post?.value.title,
-    description: post?.value.excerpt,
+    description: post?.value.description,
     openGraph: {
-      images: [
-        post?.value.featuredImage &&
-          `https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${post.value.featuredImage.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`,
-      ].filter(Boolean),
+      // images: [
+      //   post?.value.featuredImage &&
+      //     `https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${post.value.featuredImage.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`,
+      // ].filter(Boolean),
     },
   }
 }
 
 export async function generateStaticParams() {
-  const posts = await blog.listPosts()
+  const posts = (await blog.listDocuments())?.filter(({ value }) =>
+    value.path?.startsWith('/posts/')
+  )
 
-  return posts.map((record) => ({ slug: record.value.slug }))
+  return posts.map((record) => ({
+    slug: record.value.path?.slice('/posts/'.length),
+  }))
 }
 
 export default async function PostSingle({
@@ -42,16 +46,17 @@ export default async function PostSingle({
   params: Promise<PostParams>
 }) {
   const { slug } = await params
-  const post = await blog.findPost({ slug })
+  const post = await blog.findDocument({ path: `/posts/${slug}` })
 
-  // Replace relative image paths with getBlob URLs
-  const postContent = post?.value.content.replaceAll(
-    /src="\.\/([^"]*)"/gm,
-    (match, filename) => {
-      const image = post.value.images?.find((i) => i.filename === filename)
+  if (!post?.value) {
+    // 404
+    return null
+  }
 
-      return `src="https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${image?.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}"`
-    }
+  // Replace absolute paths with domain-relative paths
+  const postContent = (post.value.content as string | undefined)?.replaceAll(
+    /https\:\/\/polhem\.us\//gm,
+    '/'
   )
 
   return (
@@ -61,11 +66,13 @@ export default async function PostSingle({
           {post?.value.title}
         </h1>
         <p>
-          <PostDate date={post?.value.createdAt as string} />
+          <PostDate date={post?.value.publishedAt as string} />
         </p>
       </div>
       <div className="rich-text mx-auto max-w-3xl">
-        <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>{postContent}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+          {postContent}
+        </Markdown>
       </div>
     </div>
   )
