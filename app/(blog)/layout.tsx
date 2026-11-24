@@ -3,6 +3,7 @@ import { Crimson_Pro, Rubik } from 'next/font/google'
 import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
+import Head from 'next/head'
 import Markdown from 'react-markdown'
 
 import { BlogClient } from '@/services/blog'
@@ -44,9 +45,15 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${crimsonPro.variable} ${rubik.variable}`}>
-      <body className="bg-chardonnay-200 flex min-h-screen flex-col">
+      <Head>
+        <link
+          rel="site.standard.publication"
+          href="at://did:plc:p5a4pydyirvdkmc3lhw2iykp/site.standard.publication/3mganjxbbjd2n"
+        />
+      </Head>
+      <body className="flex min-h-screen flex-col bg-chardonnay-200">
         <header className="px-4 pt-2">
-          <h1 className="text-golden-bell-900 mx-auto max-w-7xl text-2xl font-semibold hover:underline">
+          <h1 className="mx-auto max-w-7xl text-2xl font-semibold text-golden-bell-900 hover:underline">
             <Link href="/">The personal blog of Scott Polhemus</Link>
           </h1>
         </header>
@@ -55,7 +62,7 @@ export default async function RootLayout({
           <div className="mx-auto max-w-7xl">
             <Image
               alt="Scott Polhemus"
-              className="float-right ml-2 h-25 w-25 rounded-full"
+              className="h-25 w-25 float-right ml-2 rounded-full"
               width="200"
               height="200"
               src="/assets/profile.png"
