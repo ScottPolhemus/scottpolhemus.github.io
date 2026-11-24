@@ -3,6 +3,7 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { BlogClient } from '@/services/blog'
+import Head from 'next/head'
 
 type PostParams = {
   slug: string
@@ -61,6 +62,12 @@ export default async function PostSingle({
 
   return (
     <div className="p-4">
+      <Head>
+        <link
+          rel="site.standard.document"
+          href={post?.uri}
+        />
+      </Head>
       <div className="mb-4 md:text-center">
         <h1 className="mx-auto mb-2 max-w-5xl font-serif text-5xl font-light">
           {post?.value.title}
