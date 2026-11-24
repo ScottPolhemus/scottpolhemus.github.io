@@ -22,10 +22,10 @@ export async function generateMetadata({
     title: post?.value.title,
     description: post?.value.description,
     openGraph: {
-      // images: [
-      //   post?.value.featuredImage &&
-      //     `https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${post.value.featuredImage.image.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`,
-      // ].filter(Boolean),
+      images: [
+        !!post?.value.coverImage?.ref &&
+          `https://bsky.social/xrpc/com.atproto.sync.getBlob?cid=${post.value.coverImage.ref}&did=${process.env.NEXT_PUBLIC_ATPROTO_DID}`,
+      ].filter(Boolean),
     },
   }
 }
@@ -54,7 +54,7 @@ export default async function PostSingle({
   }
 
   // Replace absolute paths with domain-relative paths
-  const postContent = (post.value.content as string | undefined)?.replaceAll(
+  const postContent = (post.value.content.text.markdown as string | undefined)?.replaceAll(
     /https\:\/\/polhem\.us\//gm,
     '/'
   )
