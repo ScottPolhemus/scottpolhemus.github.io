@@ -15,6 +15,7 @@
     "@atproto/oauth-client-browser": "^0.3.6",
     "@nextui-org/react": "^2.6.11",
     "feed": "^4.2.2",
+    "lodash": "^4.18.1",
     "moment": "^2.30.1",
     "motion": "^11.16.4",
     "next": "^15.1.4",

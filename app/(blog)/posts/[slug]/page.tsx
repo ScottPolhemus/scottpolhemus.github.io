@@ -4,6 +4,7 @@ import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { BlogClient } from '@/services/blog'
 import Head from 'next/head'
+import _get from 'lodash/get'
 
 type PostParams = {
   slug: string
@@ -55,7 +56,7 @@ export default async function PostSingle({
   }
 
   // Replace absolute paths with domain-relative paths
-  const postContent = (post.value.content.text.markdown as string | undefined)?.replaceAll(
+  const postContent = _get(post, 'value.content.text.markdown', '').replaceAll(
     /https\:\/\/polhem\.us\//gm,
     '/'
   )
